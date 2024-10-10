@@ -17,7 +17,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="200" height="38"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="rYE-lo-8a2">
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="rYE-lo-8a2">
                         <rect key="frame" x="0.0" y="0.0" width="200" height="38"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Sp-il-7hw">
@@ -46,6 +46,13 @@
                             <constraint firstItem="3Sp-il-7hw" firstAttribute="leading" secondItem="rYE-lo-8a2" secondAttribute="leading" id="V4w-HY-nPg"/>
                             <constraint firstItem="3Sp-il-7hw" firstAttribute="top" secondItem="rYE-lo-8a2" secondAttribute="top" id="hdt-13-sJB"/>
                         </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="userInteractionEnabled" value="NO"/>
+                        </userDefinedRuntimeAttributes>
                     </stackView>
                 </subviews>
             </view>

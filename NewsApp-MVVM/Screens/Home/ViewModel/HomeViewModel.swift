@@ -6,21 +6,33 @@
 //
 
 import Foundation
+import Alamofire
+
 
 class HomeViewModel {
     var newsItems: [NewsItem] = []
-    
-    func fetchNews() { // API CAĞRISI TAMAMLANDIĞINDA UI YI GÜNCELLEYEMEYEBİLİRİM COMPLETION HANDLER KULLANMAZSAM
-        APIServices.shared.fetchNews { result in
+    var selectedCategory: Categories = .general
+    var selectedCategoryIndex: IndexPath?
+   
+    func fetchNews(completion: @escaping () -> Void) {
+        APIServices.shared.fetchNews(category: selectedCategory) { result in
             switch result {
             case .success(let items):
                 self.newsItems = items
                 print(items)
-//                completion(.success(items))
+                completion()
             case .failure(let error):
-//                completion(.failure(error))
                 print("error-\(error)")
+                completion()
             }
         }
+    }
+
+    func getCategoriesCount() -> Int {
+        return Categories.allCases.count
+    }
+    
+    func getNewsItemsCount() -> Int {
+        return newsItems.count
     }
 }
