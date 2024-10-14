@@ -13,14 +13,24 @@ class HomeVC: UIViewController {
     @IBOutlet weak var newsTableView: UITableView!
     
     var viewModel = HomeViewModel()
-    var tag: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        fetchNewsData()
+        viewModel.delegate = self
         configureCollectionView()
         configureTableView()
+        viewModel.registerCells(for: categoryCollectionView, and: newsTableView)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     func fetchNewsData() {
@@ -33,8 +43,7 @@ class HomeVC: UIViewController {
     }
     
     private func configureCollectionView() {
-        let nib = UINib(nibName: "CategoryCell", bundle: nil)
-        categoryCollectionView.register(nib, forCellWithReuseIdentifier: "CategoryCell")
+        
         categoryCollectionView.dataSource = self
         categoryCollectionView.delegate = self
         categoryCollectionView.allowsSelection = true
@@ -50,8 +59,6 @@ class HomeVC: UIViewController {
     private func configureTableView() {
         newsTableView.dataSource = self
         newsTableView.delegate = self
-        newsTableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier: "NewsCell")
-        
         viewModel.selectedCategoryIndex = IndexPath(item: 0, section: 0)
         categoryCollectionView.selectItem(at: viewModel.selectedCategoryIndex, animated: false, scrollPosition: [])
     }
@@ -69,6 +76,19 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.configureCell(newsItem: newsItem)
         cell.indexPath = indexPath
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "toNewsDetail", sender: indexPath)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toNewsDetail" {
+            if let indexPath = sender as? IndexPath,
+               let detailVC = segue.destination as? NewsDetailVC {
+                detailVC.viewModel.news = viewModel.newsItems[indexPath.row]
+            }
+        }
     }
     
     
@@ -114,5 +134,11 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             
             collectionView.reloadItems(at: indexPathsToReload)
         }
+    }
+}
+
+extension HomeVC: HomeViewModelProtocol {
+    func reloadData() {
+        newsTableView.reloadData()
     }
 }
