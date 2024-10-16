@@ -11,10 +11,10 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate  {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupTabBarItems()
+        
     }
-    
+   
     func setupTabBarItems() {
         guard let items = tabBar.items else {
             print("Tab bar items are nil.")
@@ -38,8 +38,6 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate  {
         let selectedFavImg = UIImage(named: "SelectedFavorite")?.withRenderingMode(.alwaysOriginal)
         items[2].image = nonSelectedFavImg
         items[2].selectedImage = selectedFavImg
-        
-        
     }
     
     

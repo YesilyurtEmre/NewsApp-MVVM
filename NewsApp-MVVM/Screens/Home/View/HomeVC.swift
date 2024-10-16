@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeVC: UIViewController {
+class HomeVC: BaseVC {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     @IBOutlet weak var newsTableView: UITableView!
@@ -40,6 +40,7 @@ class HomeVC: UIViewController {
             }
             
         }
+        
     }
     
     private func configureCollectionView() {

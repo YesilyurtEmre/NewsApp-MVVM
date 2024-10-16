@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NewsDetailVC: UIViewController {
+class NewsDetailVC: BaseVC {
     @IBOutlet weak var detailImageView: UIImageView!
     @IBOutlet weak var detailTagLbl: UILabel!
     @IBOutlet weak var detailTitleLbl: UILabel!
