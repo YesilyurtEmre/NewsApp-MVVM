@@ -28,11 +28,11 @@ class HomeViewModel {
             print("data fetched")
         }
     }
-    
     struct CellIdentifiers {
         static let newsCell = "NewsCell"
         static let categoryCell = "CategoryCell"
     }
+    
     
     func selectNewsItem(at indexPath: IndexPath) {
         selectedNewsItem = newsItems[indexPath.row]

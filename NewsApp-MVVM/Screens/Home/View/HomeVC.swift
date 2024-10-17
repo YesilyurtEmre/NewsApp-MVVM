@@ -25,7 +25,6 @@ class HomeVC: BaseVC {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -34,13 +33,16 @@ class HomeVC: BaseVC {
     }
     
     func fetchNewsData() {
-        viewModel.fetchNews { [weak self] in
-            DispatchQueue.main.async {
-                self?.newsTableView.reloadData()
+        indicator.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self else { return }
+            viewModel.fetchNews { [weak self] in
+                DispatchQueue.main.async {
+                    self?.newsTableView.reloadData()
+                    self?.indicator.stopAnimating()
+                }
             }
-            
         }
-        
     }
     
     private func configureCollectionView() {
@@ -77,6 +79,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.configureCell(newsItem: newsItem)
         cell.indexPath = indexPath
         return cell
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -9,7 +9,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="7c4-C7-cLq">
             <objects>
-                <tabBarController hidesBottomBarWhenPushed="YES" id="4iH-vT-VZc" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarController" hidesBottomBarWhenPushed="YES" id="4iH-vT-VZc" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="rmR-bw-mNO">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>

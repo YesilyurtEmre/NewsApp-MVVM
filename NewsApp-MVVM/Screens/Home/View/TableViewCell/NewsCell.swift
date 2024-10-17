@@ -18,6 +18,7 @@ class NewsCell: UITableViewCell {
     var newsItem: NewsItem?
     var indexPath: IndexPath?
     var news: [NewsItem] = []
+    var isFavorite: Bool = false
     
     override func awakeFromNib() {
         super.awakeFromNib()

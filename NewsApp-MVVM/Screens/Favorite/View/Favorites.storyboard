@@ -15,13 +15,38 @@
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorites" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wfx-eY-8py">
+                                <rect key="frame" x="16" y="67" width="361" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="bzw-OM-4VY">
+                                <rect key="frame" x="16" y="104" width="361" height="649"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Wfx-eY-8py" secondAttribute="trailing" constant="16" id="8If-k7-z5B"/>
+                            <constraint firstItem="Wfx-eY-8py" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="8" id="EOk-Xt-udb"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="bzw-OM-4VY" secondAttribute="trailing" constant="16" id="PrA-n2-lVu"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="bzw-OM-4VY" secondAttribute="bottom" constant="16" id="V7v-7u-v3o"/>
+                            <constraint firstItem="bzw-OM-4VY" firstAttribute="top" secondItem="Wfx-eY-8py" secondAttribute="bottom" constant="16" id="ZOt-L4-7pi"/>
+                            <constraint firstItem="bzw-OM-4VY" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="s0T-zr-OO7"/>
+                            <constraint firstItem="Wfx-eY-8py" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="16" id="vlw-AQ-Auz"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="NonselectedFavorite" id="477-3v-swS"/>
                     <navigationItem key="navigationItem" id="dH8-tp-o0M"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="favTableView" destination="bzw-OM-4VY" id="fOr-ku-b1D"/>
+                        <outlet property="favTitleLbl" destination="Wfx-eY-8py" id="Bix-6X-UUt"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
