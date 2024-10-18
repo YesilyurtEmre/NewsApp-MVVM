@@ -16,13 +16,16 @@ class LoginVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     @IBAction func loginButtonTapped(_ sender: Any) {
-        guard let email = emailTextfield.text, !email.isEmpty,
-              let password = passwordTextfield.text, !password.isEmpty else {
-            showMessage(String.emptyFields)
+        guard let email = emailTextfield.text, !email.isEmpty else {
+            showMessage(String.emptyEmail)
+            return
+        }
+        
+        guard let password = passwordTextfield.text, !password.isEmpty else {
+            showMessage(String.emptyPassword)
             return
         }
         

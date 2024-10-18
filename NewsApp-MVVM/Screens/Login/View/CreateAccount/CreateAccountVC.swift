@@ -19,7 +19,6 @@ class CreateAccountVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
     @IBAction func backButtonTapped(_ sender: Any) {
@@ -44,7 +43,6 @@ class CreateAccountVC: UIViewController {
             DispatchQueue.main.async {
                 if success {
                     self?.showMessage(String.registrationSuccess)
-                    self?.dismiss(animated: true, completion: nil)
                 } else {
                     self?.showMessage(message ?? String.loginError)
                 }
@@ -57,6 +55,4 @@ class CreateAccountVC: UIViewController {
         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
-    
-    
 }

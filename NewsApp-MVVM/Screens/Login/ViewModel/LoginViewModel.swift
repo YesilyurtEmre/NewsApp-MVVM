@@ -11,8 +11,8 @@ import FirebaseAuth
 class LoginViewModel {
     func login(email: String, password: String, completion: @escaping (Bool, String?) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-            if let error = error {
-                let errorMessage = self.getErrorMessage(for: error)
+            if let error = error as NSError? {
+                let errorMessage = self.handleErrorMessage(error)
                 completion(false, errorMessage)
                 return
             }
@@ -20,21 +20,19 @@ class LoginViewModel {
         }
     }
     
-    private func getErrorMessage(for error: Error) -> String {
-        let nsError = error as NSError
-        switch nsError.code {
-        case AuthErrorCode.invalidEmail.rawValue:
-            return "Geçersiz e-posta adresi."
-        case AuthErrorCode.userNotFound.rawValue:
-            return "Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı."
-        case AuthErrorCode.wrongPassword.rawValue:
-            return "Şifre yanlış. Lütfen tekrar deneyin."
-        case AuthErrorCode.userDisabled.rawValue:
-            return "Bu kullanıcı hesabı devre dışı bırakılmış."
-        case AuthErrorCode.operationNotAllowed.rawValue:
-            return "Bu işlem için hesap doğrulanmamış veya izin verilmemiş."
+    func handleErrorMessage(_ error: NSError) -> String {
+        guard let errorCode = AuthErrorCode(rawValue: error.code) else {
+            return String.loginError
+        }
+        switch errorCode {
+        case .invalidEmail:
+            return "Lütfen geçerli bir e-posta adresi girin."
+        case .userNotFound:
+            return "Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı." // bu hata gelmiyor
+        case .wrongPassword:
+            return "Şifre yanlış. Lütfen tekrar deneyin." // bu hata gelmiyor
         default:
-            return "Bilinmeyen bir hata oluştu: \(error.localizedDescription)"
+            return "Bilinmeyen bir hata oluştu lütfen tekrar deneyin"
         }
     }
 }
