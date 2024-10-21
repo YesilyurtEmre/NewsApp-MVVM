@@ -21,6 +21,8 @@ class HomeViewModel {
     var selectedCategoryIndex: IndexPath?
     var selectedNewsItem: NewsItem?
     
+    private var favoriteNews: [NewsItem] = []
+    
     weak var delegate: HomeViewModelProtocol?
     
     init() {
@@ -60,11 +62,52 @@ class HomeViewModel {
         }
     }
     
+    func handleFavoriteButtonTapped(at indexPath: IndexPath, isFavorite: Bool) {
+        let newsItem = newsItems[indexPath.row]
+        
+        if !isFavorite {
+            FavoriteNewsManager.shared.removeFavorite(newsID: newsItem.id.uuidString) { error in
+                if let error = error {
+                    print("Error removing favorite: \(error.localizedDescription)")
+                } else {
+                    print("Favorite removed successfully")
+                    self.removeFavorite(news: newsItem)
+                    self.delegate?.reloadData()
+                }
+            }
+        } else {
+            FavoriteNewsManager.shared.addFavorite(news: newsItem) { error in
+                if let error = error {
+                    print("Error adding favorite: \(error.localizedDescription)")
+                } else {
+                    print("Favorite added successfully")
+                    self.addFavorite(news: newsItem)
+                    self.delegate?.reloadData()
+                }
+            }
+        }
+    }
+    
+    
     func getCategoriesCount() -> Int {
         return Categories.allCases.count
     }
     
     func getNewsItemsCount() -> Int {
         return newsItems.count
+    }
+    
+    func isFavorite(news: NewsItem) -> Bool {
+        return favoriteNews.contains { $0.id == news.id }
+    }
+    
+    func addFavorite(news: NewsItem) {
+        if !isFavorite(news: news) {
+            favoriteNews.append(news)
+        }
+    }
+    
+    func removeFavorite(news: NewsItem) {
+        favoriteNews.removeAll { $0.id == news.id }
     }
 }

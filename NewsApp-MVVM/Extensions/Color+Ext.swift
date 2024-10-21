@@ -22,3 +22,7 @@ extension UIColor {
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
 }
+
+extension Notification.Name {
+    static let favoriteButtonTapped = Notification.Name("favImageTapped")
+}

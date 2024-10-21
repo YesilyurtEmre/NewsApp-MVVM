@@ -20,6 +20,29 @@ class HomeVC: BaseVC {
         configureCollectionView()
         configureTableView()
         viewModel.registerCells(for: categoryCollectionView, and: newsTableView)
+        fetchNewsData()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleFavoriteButtonTapped(_:)),
+                                               name: .favoriteButtonTapped,
+                                               object: nil)    }
+    
+    @objc func handleFavoriteButtonTapped(_ notification: Notification) {
+        guard let indexPath = notification.object as? IndexPath else { return }
+        
+        if let cell = newsTableView.cellForRow(at: indexPath) as? NewsCell {
+            let isFavorite = !cell.isFavorite
+            cell.isFavorite = isFavorite
+            let imageName = isFavorite ? "SelectedFavorite" : "NonselectedFavorite"
+            cell.favImageView.image = UIImage(named: imageName)
+            
+            if cell.isFavorite {
+                viewModel.handleFavoriteButtonTapped(at: indexPath, isFavorite: true)
+            } else {
+                viewModel.handleFavoriteButtonTapped(at: indexPath, isFavorite: false)
+            }
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -30,6 +53,7 @@ class HomeVC: BaseVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
+        
     }
     
     func fetchNewsData() {
@@ -79,7 +103,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.configureCell(newsItem: newsItem)
         cell.indexPath = indexPath
         return cell
-        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

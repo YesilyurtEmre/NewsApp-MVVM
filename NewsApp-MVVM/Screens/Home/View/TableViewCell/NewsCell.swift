@@ -17,14 +17,24 @@ class NewsCell: UITableViewCell {
     
     var newsItem: NewsItem?
     var indexPath: IndexPath?
-    var news: [NewsItem] = []
     var isFavorite: Bool = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        setupFavImageTapGesture()
     }
     
+    func setupFavImageTapGesture() {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(favImageTapped))
+            favImageView.isUserInteractionEnabled = true
+            favImageView.addGestureRecognizer(tapGesture)
+        }
+        
+    @objc func favImageTapped() {
+        guard let tableView = superview as? UITableView,
+              let indexPath = tableView.indexPath(for: self) else { return }
+        NotificationCenter.default.post(name: .favoriteButtonTapped, object: indexPath)
+       }
     func configureCell(newsItem: NewsItem) {
         tagTitleLbl.text = newsItem.source
         newsTitleLbl.text = newsItem.name
@@ -45,9 +55,13 @@ class NewsCell: UITableViewCell {
         } else {
             newsImageView.image = UIImage(named: "placeholder")
         }
-        
         selectionStyle = .none
     }
+    
+    private func updateFavImage() {
+            let imageName = isFavorite ? "SelectedFavorite" : "NonselectedFavorite"
+            favImageView.image = UIImage(named: imageName)
+        }
     
     
     override func setSelected(_ selected: Bool, animated: Bool) {
