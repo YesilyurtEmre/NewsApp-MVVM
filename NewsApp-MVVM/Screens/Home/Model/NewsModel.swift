@@ -20,6 +20,7 @@ struct NewsItem: Codable {
     let image: String
     let name: String
     let source: String
+    var isFavorite: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case key, url, description, image, name, source
@@ -31,21 +32,6 @@ struct NewsItem: Codable {
         var dictionary = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
         dictionary["id"] = id.uuidString // Store UUID as String
         return dictionary
-    }
-    
-    // Convert Dictionary to NewsItem
-    static func fromDictionary(_ dict: [String: Any]) -> NewsItem? {
-        do {
-            var data = dict
-            if let idString = dict["id"] as? String {
-                data["id"] = UUID(uuidString: idString) // Convert String back to UUID
-            }
-            let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-            return try JSONDecoder().decode(NewsItem.self, from: jsonData)
-        } catch {
-            print("Error decoding NewsItem: \(error)")
-            return nil
-        }
     }
 }
 

@@ -21,28 +21,15 @@ class HomeVC: BaseVC {
         configureTableView()
         viewModel.registerCells(for: categoryCollectionView, and: newsTableView)
         fetchNewsData()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleFavoriteStatusChanged(_:)), name: .favoriteStatusChanged, object: nil)
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleFavoriteButtonTapped(_:)),
-                                               name: .favoriteButtonTapped,
-                                               object: nil)    }
+    }
     
-    @objc func handleFavoriteButtonTapped(_ notification: Notification) {
-        guard let indexPath = notification.object as? IndexPath else { return }
-        
-        if let cell = newsTableView.cellForRow(at: indexPath) as? NewsCell {
-            let isFavorite = !cell.isFavorite
-            cell.isFavorite = isFavorite
-            let imageName = isFavorite ? "SelectedFavorite" : "NonselectedFavorite"
-            cell.favImageView.image = UIImage(named: imageName)
-            
-            if cell.isFavorite {
-                viewModel.handleFavoriteButtonTapped(at: indexPath, isFavorite: true)
-            } else {
-                viewModel.handleFavoriteButtonTapped(at: indexPath, isFavorite: false)
-            }
+    @objc func handleFavoriteStatusChanged(_ notification: Notification) {
+        if let newsItem = notification.userInfo?["newsItem"] as? NewsItem {
+            viewModel.updateFavoriteStatus(for: newsItem)
+            newsTableView.reloadData()
         }
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,7 +88,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         let cell = newsTableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
         let newsItem = viewModel.newsItems[indexPath.row]
         cell.configureCell(newsItem: newsItem)
-        cell.indexPath = indexPath
         return cell
     }
     
@@ -113,12 +99,12 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         if segue.identifier == "toNewsDetail" {
             if let indexPath = sender as? IndexPath,
                let detailVC = segue.destination as? NewsDetailVC {
-                detailVC.viewModel.news = viewModel.newsItems[indexPath.row]
+                let selectedNews = viewModel.getNewsItem(at: indexPath)
+                let detailViewModel = NewsDetailViewModel(news: selectedNews)
+                detailVC.viewModel = detailViewModel
             }
         }
     }
-    
-    
 }
 
 // MARK: - CollectionView

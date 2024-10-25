@@ -13,20 +13,12 @@ class NewsDetailVC: BaseVC {
     @IBOutlet weak var detailTitleLbl: UILabel!
     @IBOutlet weak var detailDescLbl: UILabel!
     
-    var viewModel = HomeViewModel()
+    var viewModel: NewsDetailViewModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let newsItem = viewModel.news {
-            if let imageUrl = URL(string: newsItem.image) {
-                detailImageView.af.setImage(withURL: imageUrl, placeholderImage: UIImage(named: "placeholder"))
-            } else {
-                detailImageView.image = UIImage(named: "placeholder")
-            }
-            detailTagLbl.text = newsItem.source
-            detailTitleLbl.text = newsItem.name
-            detailDescLbl.text = newsItem.description
-        }
+        
+        configureUI()
         
         self.navigationItem.hidesBackButton = false
         self.navigationItem.title = "Google News"
@@ -36,8 +28,18 @@ class NewsDetailVC: BaseVC {
                                                action: #selector(backButtonTapped))
         self.navigationItem.leftBarButtonItem = backButtonTapped
         backButtonTapped.tintColor = .black
+    }
+    
+    func configureUI() {
+        if let imageUrl = viewModel.newsImageUrl {
+            detailImageView.af.setImage(withURL: imageUrl, placeholderImage: UIImage(named: "placeholder"))
+        } else {
+            detailImageView.image = UIImage(named: "placeholder")
+        }
         
-        
+        detailTagLbl.text = viewModel.newsSource
+        detailTitleLbl.text = viewModel.newsTitle
+        detailDescLbl.text = viewModel.newsDescription
     }
     
     @objc func backButtonTapped() {

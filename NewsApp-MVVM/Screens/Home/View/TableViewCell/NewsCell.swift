@@ -15,27 +15,57 @@ class NewsCell: UITableViewCell {
     @IBOutlet weak var newsTitleLbl: UILabel!
     @IBOutlet weak var newsDescLbl: UILabel!
     
-    var newsItem: NewsItem?
-    var indexPath: IndexPath?
-    var isFavorite: Bool = false
+    var newsItem: NewsItem? {
+        didSet {
+            updateFavImage()
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         setupFavImageTapGesture()
     }
     
-    func setupFavImageTapGesture() {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(favImageTapped))
-            favImageView.isUserInteractionEnabled = true
-            favImageView.addGestureRecognizer(tapGesture)
+    private func setupFavImageTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(favImageTapped))
+        favImageView.isUserInteractionEnabled = true
+        favImageView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func favImageTapped() {
+        guard var item = newsItem else { return }
+    
+        if item.isFavorite {
+            item.isFavorite = false
+            FavoriteNewsManager.shared.removeFavorite(newsID: item.id.uuidString) { error in
+                if let error = error {
+                    print("Error removing favorite: \(error)")
+                } else {
+                    print("Favori olarak kaldırıldı: \(item.name)")
+                }
+            }
+        } else {
+            item.isFavorite = true
+            FavoriteNewsManager.shared.addFavorite(news: item) { error in
+                if let error = error {
+                    print("Error adding favorite: \(error)")
+                } else {
+                    print("Favori olarak eklendi: \(item.name)")
+                }
+            }
         }
-        
-    @objc func favImageTapped() {
-        guard let tableView = superview as? UITableView,
-              let indexPath = tableView.indexPath(for: self) else { return }
-        NotificationCenter.default.post(name: .favoriteButtonTapped, object: indexPath)
-       }
+        newsItem = item
+        NotificationCenter.default.post(name: .favoriteStatusChanged, object: nil, userInfo: ["newsItem": item])
+    }
+    
+    private func updateFavImage() {
+        guard let newsItem = newsItem else { return }
+        let imageName = newsItem.isFavorite ? "SelectedFavorite" : "NonselectedFavorite"
+        favImageView.image = UIImage(named: imageName)
+    }
+    
     func configureCell(newsItem: NewsItem) {
+        self.newsItem = newsItem
         tagTitleLbl.text = newsItem.source
         newsTitleLbl.text = newsItem.name
         newsTitleLbl.textColor = .black
@@ -55,19 +85,12 @@ class NewsCell: UITableViewCell {
         } else {
             newsImageView.image = UIImage(named: "placeholder")
         }
+        
         selectionStyle = .none
     }
     
-    private func updateFavImage() {
-            let imageName = isFavorite ? "SelectedFavorite" : "NonselectedFavorite"
-            favImageView.image = UIImage(named: imageName)
-        }
-    
-    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
-        
     }
     
 }

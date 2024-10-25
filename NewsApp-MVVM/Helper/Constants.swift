@@ -1,13 +1,13 @@
 //
-//  String+messages.swift
+//  Constants.swift
 //  NewsApp-MVVM
 //
-//  Created by Emre Yeşilyurt on 17.10.2024.
+//  Created by Emre Yeşilyurt on 25.10.2024.
 //
 
 import Foundation
 
-extension String {
+struct Constants {
     static let registrationSuccess = "Kayıt başarılı! Giriş yapabilirsiniz."
     static let emptyEmail = "Email boş bırakılamaz."
     static let emptyPassword = "Şifre boş bırakılamaz"

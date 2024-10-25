@@ -9,7 +9,7 @@ import Foundation
 
 enum EndPoints {
     static let BASE_URL = "https://api.collectapi.com/news/getNews?country=tr"
-    static let API_KEY = "2HWSEA9aqP5Q6ZFfaS1k1D:25ua8W1N0qNwyLTa9eRjhW"
+    static let API_KEY = "apikey 4rAmjRYvGLDyTFydB8klM4:5oRhsZtsdmOYmgLl6voNQy"
     
     case getNews(String)
     

@@ -30,21 +30,21 @@ class CreateAccountVC: UIViewController {
         guard let email = emailTextField.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty,
               let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty else {
-            showMessage(String.requiredFields)
+            showMessage(Constants.requiredFields)
             return
         }
         
         guard password == confirmPassword else {
-            showMessage(String.passwordMismatch)
+            showMessage(Constants.passwordMismatch)
             return
         }
         
         createAccountViewModel.createAccount(email: email, password: password) { [weak self] success, message in
             DispatchQueue.main.async {
                 if success {
-                    self?.showMessage(String.registrationSuccess)
+                    self?.showMessage(Constants.registrationSuccess)
                 } else {
-                    self?.showMessage(message ?? String.loginError)
+                    self?.showMessage(message ?? Constants.loginError)
                 }
             }
         }

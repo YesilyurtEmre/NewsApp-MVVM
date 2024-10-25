@@ -41,11 +41,19 @@ class FavoriteNewsManager {
                 completion(nil, error)
                 return
             }
+            var newsItems: [NewsItem] = []
             
-            let favorites = documents.compactMap { doc -> NewsItem? in
-                return NewsItem.fromDictionary(doc.data())
+            for document in documents {
+                do {
+                    let newsItem = try document.data(as: NewsItem.self)
+                    newsItems.append(newsItem)
+                } catch {
+                    print("Error decoding document: \(error)")
+                    completion(nil, error)
+                }
             }
-            completion(favorites, nil)
+            
+            completion(newsItems, nil)
         }
     }
 }

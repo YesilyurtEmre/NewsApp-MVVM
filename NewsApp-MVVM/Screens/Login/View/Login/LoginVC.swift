@@ -20,12 +20,12 @@ class LoginVC: UIViewController {
     
     @IBAction func loginButtonTapped(_ sender: Any) {
         guard let email = emailTextfield.text, !email.isEmpty else {
-            showMessage(String.emptyEmail)
+            showMessage(Constants.emptyEmail)
             return
         }
         
         guard let password = passwordTextfield.text, !password.isEmpty else {
-            showMessage(String.emptyPassword)
+            showMessage(Constants.emptyPassword)
             return
         }
         
@@ -38,7 +38,7 @@ class LoginVC: UIViewController {
                         self?.present(tabBarController, animated: true, completion: nil)
                     }
                 } else {
-                    self?.showMessage(message ?? String.loginError)
+                    self?.showMessage(message ?? Constants.loginError)
                 }
             }
         }

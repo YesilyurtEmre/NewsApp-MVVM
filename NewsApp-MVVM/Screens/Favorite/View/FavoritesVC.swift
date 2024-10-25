@@ -16,8 +16,6 @@ class FavoritesVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
-    
 }
 
 extension FavoritesVC: UITableViewDelegate, UITableViewDataSource {
@@ -29,7 +27,6 @@ extension FavoritesVC: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
         let newsItem = favoriteNews[indexPath.row]
         cell.newsItem = newsItem
-        cell.isFavorite = true
         return cell
     }
     
