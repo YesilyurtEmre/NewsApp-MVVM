@@ -22,7 +22,6 @@ class HomeVC: BaseVC {
         viewModel.registerCells(for: categoryCollectionView, and: newsTableView)
         fetchNewsData()
         NotificationCenter.default.addObserver(self, selector: #selector(handleFavoriteStatusChanged(_:)), name: .favoriteStatusChanged, object: nil)
-        
     }
     
     @objc func handleFavoriteStatusChanged(_ notification: Notification) {
@@ -47,12 +46,7 @@ class HomeVC: BaseVC {
         indicator.startAnimating()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             guard let self else { return }
-            viewModel.fetchNews { [weak self] in
-                DispatchQueue.main.async {
-                    self?.newsTableView.reloadData()
-                    self?.indicator.stopAnimating()
-                }
-            }
+            viewModel.fetchNews()
         }
     }
     
@@ -152,6 +146,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
 
 extension HomeVC: HomeViewModelProtocol {
     func reloadData() {
+        self.indicator.stopAnimating()
         newsTableView.reloadData()
     }
 }

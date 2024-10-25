@@ -46,6 +46,7 @@ class NewsCell: UITableViewCell {
             }
         } else {
             item.isFavorite = true
+            item.userId = AuthManager.shared.currentUser?.userID
             FavoriteNewsManager.shared.addFavorite(news: item) { error in
                 if let error = error {
                     print("Error adding favorite: \(error)")

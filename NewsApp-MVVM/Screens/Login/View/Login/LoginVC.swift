@@ -29,7 +29,7 @@ class LoginVC: UIViewController {
             return
         }
         
-        loginViewModel.login(email: email, password: password) { [weak self] success, message in
+        loginViewModel.login(email: email, password: password) { [weak self] success, error in
             DispatchQueue.main.async {
                 if success {
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -38,7 +38,7 @@ class LoginVC: UIViewController {
                         self?.present(tabBarController, animated: true, completion: nil)
                     }
                 } else {
-                    self?.showMessage(message ?? Constants.loginError)
+                    self?.showMessage(String(describing: error))
                 }
             }
         }

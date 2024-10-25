@@ -21,17 +21,10 @@ struct NewsItem: Codable {
     let name: String
     let source: String
     var isFavorite: Bool = false
+    var userId: String?
     
     enum CodingKeys: String, CodingKey {
         case key, url, description, image, name, source
-    }
-    
-    // Convert NewsItem to Dictionary
-    func toDictionary() throws -> [String: Any] {
-        let data = try JSONEncoder().encode(self)
-        var dictionary = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-        dictionary["id"] = id.uuidString // Store UUID as String
-        return dictionary
     }
 }
 

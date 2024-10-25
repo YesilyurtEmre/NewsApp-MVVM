@@ -23,7 +23,7 @@ class CreateAccountViewModel {
     
     private func handleFirebaseError(_ error: NSError) -> String {
         guard let errorCode = AuthErrorCode(rawValue: error.code) else {
-            return String.loginError
+            return Constants.loginError
         }
         switch errorCode {
         case .invalidEmail:

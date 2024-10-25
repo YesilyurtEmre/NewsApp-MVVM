@@ -11,18 +11,24 @@ import UIKit
 class FavoriteNewsManager {
     static let shared = FavoriteNewsManager()
     private let db = Firestore.firestore()
-    private let collectionName = "FavoritesNews"
+    private let collectionName = "FavoriteNews"
     
     private init() {}
     
     // MARK: - Add Favorite News
     func addFavorite(news: NewsItem, completion: @escaping (Error?) -> Void) {
-        do {
-            let data = try news.toDictionary()
-            db.collection(collectionName).document(news.id.uuidString).setData(data) { error in
-                completion(error)
-            }
-        } catch {
+        let docData: [String: String] = [
+            "id": news.id.uuidString,
+            "key": news.key,
+            "url": news.url,
+            "description": news.description,
+            "image": news.image,
+            "name": news.name,
+            "source": news.source,
+            "userId": news.userId ?? ""
+        ]
+        
+        db.collection(collectionName).document(news.id.uuidString).setData(docData) { error in
             completion(error)
         }
     }
@@ -35,14 +41,13 @@ class FavoriteNewsManager {
     }
     
     // MARK: - Load Favorite News
-    func loadFavorites(completion: @escaping ([NewsItem]?, Error?) -> Void) {
-        db.collection(collectionName).getDocuments { snapshot, error in
+    func loadFavorites(for userId: String, completion: @escaping ([NewsItem]?, Error?) -> Void) {
+        db.collection(collectionName).whereField("userId", isEqualTo: userId).getDocuments { snapshot, error in
             guard let documents = snapshot?.documents else {
                 completion(nil, error)
                 return
             }
             var newsItems: [NewsItem] = []
-            
             for document in documents {
                 do {
                     let newsItem = try document.data(as: NewsItem.self)
@@ -50,10 +55,11 @@ class FavoriteNewsManager {
                 } catch {
                     print("Error decoding document: \(error)")
                     completion(nil, error)
+                    return
                 }
             }
-            
             completion(newsItems, nil)
         }
     }
+
 }
