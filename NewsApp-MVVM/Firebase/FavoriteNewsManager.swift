@@ -29,6 +29,7 @@ class FavoriteNewsManager {
         ]
         
         db.collection(collectionName).document(news.id.uuidString).setData(docData) { error in
+            NotificationCenter.default.post(name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
             completion(error)
         }
     }
@@ -61,5 +62,5 @@ class FavoriteNewsManager {
             completion(newsItems, nil)
         }
     }
-
+    
 }
