@@ -13,13 +13,25 @@ class FavoritesVC: UIViewController {
     @IBOutlet weak var favTableView: UITableView!
     
     private let viewModel = FavoritesViewModel()
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
         bindViewModel()
-        updateFavorites()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateFavorites), name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleFavoriteStatusChanged(_:)), name: .favoriteStatusChanged, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.loadFavorites()
+    }
+    
+    @objc func handleFavoriteStatusChanged(_ notification: Notification) {
+        if let newsItem = notification.userInfo?["newsItem"] as? NewsItem {
+            viewModel.updateFavoriteStatus(for: newsItem)
+            viewModel.loadFavorites()
+            favTableView.reloadData()
+        }
     }
     
     private func bindViewModel() {
@@ -34,19 +46,10 @@ class FavoritesVC: UIViewController {
         }
     }
     
-    @objc private func updateFavorites() {
-        guard let userId = Auth.auth().currentUser?.uid else { return }
-        viewModel.loadFavorites(for: userId)
-    }
-    
     private func configureTableView() {
         favTableView.dataSource = self
         favTableView.delegate = self
         favTableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier: "NewsCell")
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
     }
 }
 
@@ -58,24 +61,7 @@ extension FavoritesVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
         let newsItem = viewModel.favoriteNews[indexPath.row]
-        cell.tagTitleLbl.text = newsItem.source
-        cell.newsTitleLbl.text = newsItem.name
-        cell.newsDescLbl.text = newsItem.description
-        cell.newsDescLbl.numberOfLines = 3
-        if let imageUrl = URL(string: newsItem.image) {
-            cell.newsImageView.af.setImage(withURL: imageUrl, placeholderImage: UIImage(named: "placeholder"))
-        } else {
-            cell.newsImageView.image = UIImage(named: "placeholder")
-        }
-        
-//        if newsItem.isFavorite {
-//            cell.favImageView.image = UIImage(named: "SelectedFavorite")
-//        } else {
-//            cell.favImageView.image = UIImage(named: "NonselectedFavorite") 
-//        }
-
+        cell.configureCell(newsItem: newsItem)
         return cell
     }
-    
-    
 }

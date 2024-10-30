@@ -34,7 +34,6 @@ class NewsCell: UITableViewCell {
     
     @objc private func favImageTapped() {
         guard var item = newsItem else { return }
-    
         if item.isFavorite {
             item.isFavorite = false
             FavoriteNewsManager.shared.removeFavorite(newsID: item.id.uuidString) { error in
@@ -86,7 +85,6 @@ class NewsCell: UITableViewCell {
         } else {
             newsImageView.image = UIImage(named: "placeholder")
         }
-        
         selectionStyle = .none
     }
     

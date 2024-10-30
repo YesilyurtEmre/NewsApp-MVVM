@@ -6,23 +6,49 @@
 //
 
 import Foundation
+import FirebaseAuth
 
-class FavoritesViewModel {
+final class FavoritesViewModel {
+    
+    init() {
+        loadFavorites()
+    }
+    
     var favoriteNews: [NewsItem] = [] {
         didSet {
             onFavoritesUpdated?()
         }
     }
+    
     var onFavoritesUpdated: (() -> Void)?
     var onError: ((Error) -> Void)?
     
-    func loadFavorites(for userId: String) {
-        FavoriteNewsManager.shared.loadFavorites(for: userId) { [weak self] newsItems, error in
-            if let error = error {
-                self?.onError?(error)
-                return
+    func loadFavorites() {
+        FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.userID ?? "") { [weak self] favoriteNews, error in
+            guard let favoriteNews = favoriteNews else { return }
+            let updatedItems = favoriteNews.map { item -> NewsItem in
+                var updatedItem = item
+                updatedItem.isFavorite = true
+                return updatedItem
             }
-            self?.favoriteNews = newsItems ?? []
+            self?.favoriteNews = updatedItems
+        }
+    }
+    
+    func updateFavoriteStatus(for newsItem: NewsItem) {
+        if let index = favoriteNews.firstIndex(where: { $0.id == newsItem.id }) {
+            favoriteNews[index].isFavorite = newsItem.isFavorite
+            
+            if !newsItem.isFavorite {
+                FavoriteNewsManager.shared.removeFavorite(newsID: newsItem.id.uuidString) { [weak self] error in
+                    if let error = error {
+                        print("Error removing favorite: \(error)")
+                        self?.onError?(error)
+                    }else {
+                        self?.onFavoritesUpdated?()
+                    }
+                }
+            }
         }
     }
 }

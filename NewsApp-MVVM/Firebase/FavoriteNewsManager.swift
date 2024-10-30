@@ -27,7 +27,6 @@ class FavoriteNewsManager {
             "source": news.source,
             "userId": news.userId ?? ""
         ]
-        
         db.collection(collectionName).document(news.id.uuidString).setData(docData) { error in
             NotificationCenter.default.post(name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
             completion(error)
@@ -39,6 +38,7 @@ class FavoriteNewsManager {
         db.collection(collectionName).document(newsID).delete { error in
             completion(error)
         }
+        
     }
     
     // MARK: - Load Favorite News
@@ -51,7 +51,12 @@ class FavoriteNewsManager {
             var newsItems: [NewsItem] = []
             for document in documents {
                 do {
-                    let newsItem = try document.data(as: NewsItem.self)
+                    var newsItem = try document.data(as: NewsItem.self)
+                    if let uuid = UUID(uuidString: document.documentID) {
+                        newsItem.id = uuid
+                    } else {
+                        print("Geçersiz UUID formatı: \(document.documentID)")
+                    }
                     newsItems.append(newsItem)
                 } catch {
                     print("Error decoding document: \(error)")
