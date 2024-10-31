@@ -38,8 +38,10 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate  {
         let selectedFavImg = UIImage(named: "SelectedFavorite")?.withRenderingMode(.alwaysOriginal)
         items[2].image = nonSelectedFavImg
         items[2].selectedImage = selectedFavImg
+        
+        let nonSelectedProfileImg = UIImage(named: "NonselectedFavorite")?.withRenderingMode(.alwaysOriginal)
+        let selectedProfileImg = UIImage(named: "SelectedFavorite")?.withRenderingMode(.alwaysTemplate)
+        items[3].image = nonSelectedFavImg
+        items[3].selectedImage = selectedFavImg
     }
-    
-    
-    
 }

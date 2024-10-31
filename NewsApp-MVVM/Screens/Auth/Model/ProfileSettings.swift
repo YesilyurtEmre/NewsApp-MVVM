@@ -16,6 +16,5 @@ enum ProfileSettings: Int, CaseIterable {
             return "Logout"
         }
     }
-    
 }
 

@@ -17,7 +17,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="TDj-Jc-KXx">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+                        <rect key="frame" x="16" y="0.0" width="288" height="80"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logout" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3k6-Os-pVx">
                                 <rect key="frame" x="0.0" y="0.0" width="53.333333333333336" height="80"/>
@@ -26,7 +26,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RUF-3A-KwL">
-                                <rect key="frame" x="296" y="0.0" width="24" height="80"/>
+                                <rect key="frame" x="264" y="0.0" width="24" height="80"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain"/>
                             </button>
@@ -34,10 +34,10 @@
                     </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="TDj-Jc-KXx" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="EFj-gt-taZ"/>
+                    <constraint firstAttribute="trailing" secondItem="TDj-Jc-KXx" secondAttribute="trailing" constant="16" id="bOA-ge-8qW"/>
                     <constraint firstAttribute="bottom" secondItem="TDj-Jc-KXx" secondAttribute="bottom" id="blA-bZ-hab"/>
                     <constraint firstItem="TDj-Jc-KXx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="bpW-bT-TzH"/>
-                    <constraint firstAttribute="trailing" secondItem="TDj-Jc-KXx" secondAttribute="trailing" id="dRd-Op-Cay"/>
+                    <constraint firstItem="TDj-Jc-KXx" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="q7U-xk-XQ5"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
