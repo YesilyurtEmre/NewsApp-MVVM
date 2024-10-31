@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F03D5112CD355A9002B1746 /* Logout.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F03D5102CD355A9002B1746 /* Logout.storyboard */; };
+		6F03D5132CD355BB002B1746 /* LogoutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F03D5122CD355BB002B1746 /* LogoutVC.swift */; };
+		6F03D51B2CD36EC7002B1746 /* ProfileSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F03D5192CD36EC7002B1746 /* ProfileSettingsCell.swift */; };
+		6F03D51C2CD36EC7002B1746 /* ProfileSettingsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6F03D51A2CD36EC7002B1746 /* ProfileSettingsCell.xib */; };
+		6F03D51E2CD371A9002B1746 /* ProfileSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F03D51D2CD371A9002B1746 /* ProfileSettings.swift */; };
+		6F03D5202CD373AD002B1746 /* LogoutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F03D51F2CD373AD002B1746 /* LogoutViewModel.swift */; };
 		6F0497EA2CC0F01300D268D5 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F0497E92CC0F01300D268D5 /* Login.storyboard */; };
 		6F0497EC2CC0F02A00D268D5 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0497EB2CC0F02A00D268D5 /* LoginVC.swift */; };
 		6F0497F02CC0F77000D268D5 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0497EF2CC0F77000D268D5 /* UserModel.swift */; };
@@ -55,6 +61,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F03D5102CD355A9002B1746 /* Logout.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Logout.storyboard; sourceTree = "<group>"; };
+		6F03D5122CD355BB002B1746 /* LogoutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutVC.swift; sourceTree = "<group>"; };
+		6F03D5192CD36EC7002B1746 /* ProfileSettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingsCell.swift; sourceTree = "<group>"; };
+		6F03D51A2CD36EC7002B1746 /* ProfileSettingsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileSettingsCell.xib; sourceTree = "<group>"; };
+		6F03D51D2CD371A9002B1746 /* ProfileSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettings.swift; sourceTree = "<group>"; };
+		6F03D51F2CD373AD002B1746 /* LogoutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutViewModel.swift; sourceTree = "<group>"; };
 		6F0497E92CC0F01300D268D5 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		6F0497EB2CC0F02A00D268D5 /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		6F0497EF2CC0F77000D268D5 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -115,14 +127,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6F0497E12CC0EF0B00D268D5 /* Login */ = {
+		6F03D5142CD36DD6002B1746 /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				6F03D5192CD36EC7002B1746 /* ProfileSettingsCell.swift */,
+				6F03D51A2CD36EC7002B1746 /* ProfileSettingsCell.xib */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
+		6F0497E12CC0EF0B00D268D5 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
 				6F0497E82CC0EFEE00D268D5 /* Model */,
 				6F0497E72CC0EFE800D268D5 /* View */,
 				6F0497E62CC0EFDF00D268D5 /* ViewModel */,
 			);
-			path = Login;
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		6F0497E62CC0EFDF00D268D5 /* ViewModel */ = {
@@ -130,6 +151,7 @@
 			children = (
 				6F0497F12CC0F79600D268D5 /* LoginViewModel.swift */,
 				6F0497FD2CC11C5F00D268D5 /* CreateAccountViewModel.swift */,
+				6F03D51F2CD373AD002B1746 /* LogoutViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -137,6 +159,8 @@
 		6F0497E72CC0EFE800D268D5 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6FBD80362CD2557300A4BD4E /* Logout */,
+				6F03D5142CD36DD6002B1746 /* TableViewCell */,
 				6F0497F82CC0FFB900D268D5 /* CreateAccount */,
 				6F0497F72CC0FF9700D268D5 /* Login */,
 			);
@@ -147,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				6F0497EF2CC0F77000D268D5 /* UserModel.swift */,
+				6F03D51D2CD371A9002B1746 /* ProfileSettings.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -201,7 +226,7 @@
 			isa = PBXGroup;
 			children = (
 				6F1AEC192CCBDA4F00D3D905 /* Base */,
-				6F0497E12CC0EF0B00D268D5 /* Login */,
+				6F0497E12CC0EF0B00D268D5 /* Auth */,
 				6FA83BCD2CB6A0740052D790 /* Tabbar */,
 				6F36A79C2CB3ED8E00B1C283 /* Search */,
 				6F36A79B2CB3ED8600B1C283 /* Favorite */,
@@ -395,6 +420,15 @@
 			path = "NewsApp-MVVM";
 			sourceTree = "<group>";
 		};
+		6FBD80362CD2557300A4BD4E /* Logout */ = {
+			isa = PBXGroup;
+			children = (
+				6F03D5102CD355A9002B1746 /* Logout.storyboard */,
+				6F03D5122CD355BB002B1746 /* LogoutVC.swift */,
+			);
+			path = Logout;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -469,6 +503,8 @@
 			files = (
 				6FB3796F2CB3C9BF00AA8BF7 /* LaunchScreen.storyboard in Resources */,
 				6F36A7D22CB3FE4900B1C283 /* Home.storyboard in Resources */,
+				6F03D5112CD355A9002B1746 /* Logout.storyboard in Resources */,
+				6F03D51C2CD36EC7002B1746 /* ProfileSettingsCell.xib in Resources */,
 				6FB3796C2CB3C9BF00AA8BF7 /* Assets.xcassets in Resources */,
 				6FB3796A2CB3C9BE00AA8BF7 /* Main.storyboard in Resources */,
 				6F36A7DC2CB3FF3A00B1C283 /* Favorites.storyboard in Resources */,
@@ -493,6 +529,7 @@
 				6F1AEC132CCBD96100D3D905 /* Notification+Ext.swift in Sources */,
 				6FA83BAE2CB643CB0052D790 /* TabBarController.swift in Sources */,
 				6F36A7E22CB4035F00B1C283 /* SearchVC.swift in Sources */,
+				6F03D51E2CD371A9002B1746 /* ProfileSettings.swift in Sources */,
 				6F36A7E02CB4034900B1C283 /* FavoritesVC.swift in Sources */,
 				6F36A7DE2CB4032700B1C283 /* HomeVC.swift in Sources */,
 				6FA83BB22CB654FA0052D790 /* APIServices.swift in Sources */,
@@ -504,15 +541,18 @@
 				6F0497FC2CC11A4F00D268D5 /* CreateAccountVC.swift in Sources */,
 				6FF327E72CBCE1EC0008247C /* NewsDetailVC.swift in Sources */,
 				6F3D40742CC65DBA003DE9AE /* FavoriteNewsManager.swift in Sources */,
+				6F03D51B2CD36EC7002B1746 /* ProfileSettingsCell.swift in Sources */,
 				6F87FC162CBD491B00CFD2AF /* BaseVC.swift in Sources */,
 				6FA83BC82CB6985A0052D790 /* NewsCell.swift in Sources */,
 				6FA83BB52CB6556F0052D790 /* Categories.swift in Sources */,
 				6F0497EC2CC0F02A00D268D5 /* LoginVC.swift in Sources */,
+				6F03D5202CD373AD002B1746 /* LogoutViewModel.swift in Sources */,
 				6F0497F02CC0F77000D268D5 /* UserModel.swift in Sources */,
 				6F0497FE2CC11C5F00D268D5 /* CreateAccountViewModel.swift in Sources */,
 				6F1AEC1D2CCCE05300D3D905 /* FavoritesViewModel.swift in Sources */,
 				6F6D9B1D2CBE84C2009E931F /* SearchViewModel.swift in Sources */,
 				6FA83BB02CB6543A0052D790 /* EndPoints.swift in Sources */,
+				6F03D5132CD355BB002B1746 /* LogoutVC.swift in Sources */,
 				6FC9FEBC2CC8C8EB00B6A7D9 /* NewsDetailViewModel.swift in Sources */,
 				6FB379652CB3C9BE00AA8BF7 /* SceneDelegate.swift in Sources */,
 				6F1AEC182CCBD9EE00D3D905 /* Constants.swift in Sources */,

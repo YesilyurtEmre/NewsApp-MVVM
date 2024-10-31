@@ -22,6 +22,7 @@
                         <segue destination="lG2-gY-YRZ" kind="relationship" relationship="viewControllers" id="1dA-ae-ESU"/>
                         <segue destination="e2m-sp-emq" kind="relationship" relationship="viewControllers" id="n0X-E5-GsK"/>
                         <segue destination="aAg-Zt-GUQ" kind="relationship" relationship="viewControllers" id="otm-9B-eZ4"/>
+                        <segue destination="L7e-h7-FmD" kind="relationship" relationship="viewControllers" id="ab4-mm-ReH"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="foC-zF-v8H" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -59,6 +60,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ICz-tx-ChN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="868" y="-761"/>
+        </scene>
+        <!--Logout-->
+        <scene sceneID="0UL-jV-mcQ">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Logout" id="L7e-h7-FmD" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="sEV-Nm-5hf"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ocv-KE-wRB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="926" y="-662"/>
         </scene>
     </scenes>
     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
