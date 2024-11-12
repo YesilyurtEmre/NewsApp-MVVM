@@ -101,15 +101,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
         let searchNews = viewModel.filteredNews[indexPath.row]
-        cell.newsTitleLbl.text = searchNews.name
-        cell.newsDescLbl.text = searchNews.description
-        cell.newsDescLbl.numberOfLines = 3
-        cell.tagTitleLbl.text = searchNews.source
-        if let imageUrl = URL(string: searchNews.image) {
-            cell.newsImageView.af.setImage(withURL: imageUrl, placeholderImage: UIImage(named: "placeholder"))
-        } else {
-            cell.newsImageView.image = UIImage(named: "placeholder")
-        }
+        cell.configureCell(newsItem: searchNews)
         return cell
     }
 }
