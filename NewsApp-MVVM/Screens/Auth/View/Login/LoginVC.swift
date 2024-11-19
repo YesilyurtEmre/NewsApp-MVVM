@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LoginVC: UIViewController {
+class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var LoginTitleLbl: UILabel!
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
@@ -16,6 +16,32 @@ class LoginVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureTextFields()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailTextfield {
+            passwordTextfield.becomeFirstResponder()
+        } else if textField == passwordTextfield {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+    
+    private func configureTextFields() {
+        emailTextfield.delegate = self
+        passwordTextfield.delegate = self
+        
+        emailTextfield.setDynamicPlaceholder("E-posta adresinizi girin")
+        passwordTextfield.setDynamicPlaceholder("Şifrenizi girin")
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     @IBAction func loginButtonTapped(_ sender: Any) {

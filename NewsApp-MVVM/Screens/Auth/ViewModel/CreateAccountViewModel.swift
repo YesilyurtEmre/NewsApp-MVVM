@@ -10,6 +10,21 @@ import FirebaseAuth
 
 class CreateAccountViewModel {
     
+    func validateFields(email: String?, password: String?, confirmPassword: String?) -> (isValid: Bool, errorMessage: String?) {
+        
+        guard let email = email, !email.isEmpty,
+              let password = password, !password.isEmpty,
+              let confirmPassword = confirmPassword, !confirmPassword.isEmpty else {
+            return (false, Constants.requiredFields)
+        }
+        
+        guard password == confirmPassword else {
+            return (false, Constants.passwordMismatch)
+        }
+        
+        return (true, nil)
+    }
+    
     func createAccount(email: String, password: String, completion: @escaping (Bool, String?) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error as NSError? {

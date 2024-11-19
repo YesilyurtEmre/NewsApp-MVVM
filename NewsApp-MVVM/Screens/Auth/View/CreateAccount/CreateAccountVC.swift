@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class CreateAccountVC: UIViewController {
+class CreateAccountVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var signUpTitleLbl: UILabel!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
@@ -19,6 +19,40 @@ class CreateAccountVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        configureTextFields()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == nameTextField {
+            emailTextField.becomeFirstResponder()
+        } else if textField == emailTextField {
+            passwordTextField.becomeFirstResponder()
+        } else if textField == passwordTextField {
+            confirmPasswordTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+    
+    private func configureTextFields() {
+        nameTextField.delegate = self
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        confirmPasswordTextField.delegate = self
+        
+        nameTextField.setDynamicPlaceholder("Adınızı girin")
+        emailTextField.setDynamicPlaceholder("E-posta adresinizi girin")
+        passwordTextField.setDynamicPlaceholder("Şifrenizi girin")
+        confirmPasswordTextField.setDynamicPlaceholder("Şifrenizi tekrar girin")
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     @IBAction func backButtonTapped(_ sender: Any) {
@@ -27,17 +61,18 @@ class CreateAccountVC: UIViewController {
     
     
     @IBAction func createAccountButtonTapped(_ sender: Any) {
-        guard let email = emailTextField.text, !email.isEmpty,
-              let password = passwordTextField.text, !password.isEmpty,
-              let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty else {
-            showMessage(Constants.requiredFields)
+        let validation = createAccountViewModel.validateFields(
+            email: emailTextField.text,
+            password: passwordTextField.text,
+            confirmPassword: confirmPasswordTextField.text
+        )
+        
+        guard validation.isValid else {
+            showMessage(validation.errorMessage ?? Constants.loginError)
             return
         }
         
-        guard password == confirmPassword else {
-            showMessage(Constants.passwordMismatch)
-            return
-        }
+        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
         
         createAccountViewModel.createAccount(email: email, password: password) { [weak self] success, message in
             DispatchQueue.main.async {
