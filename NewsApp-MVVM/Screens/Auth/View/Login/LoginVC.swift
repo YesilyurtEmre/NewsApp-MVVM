@@ -7,7 +7,8 @@
 
 import UIKit
 
-class LoginVC: UIViewController, UITextFieldDelegate {
+class LoginVC: UIViewController, UITextFieldDelegate, LoginViewModelDelegate {
+    
     @IBOutlet weak var LoginTitleLbl: UILabel!
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
@@ -18,6 +19,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        loginViewModel.delegate = self
         textFields = [emailTextfield, passwordTextfield]
         configureTextFields()
         
@@ -51,29 +53,15 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func loginButtonTapped(_ sender: Any) {
-        guard let email = emailTextfield.text, !email.isEmpty else {
-            showMessage(Constants.emptyEmail)
+        let email = emailTextfield.text
+        let password = passwordTextfield.text
+        
+        if let validationError = loginViewModel.validateFields(email: email, password: password) {
+            showMessage(validationError)
             return
         }
         
-        guard let password = passwordTextfield.text, !password.isEmpty else {
-            showMessage(Constants.emptyPassword)
-            return
-        }
-        
-        loginViewModel.login(email: email, password: password) { [weak self] success, error in
-            DispatchQueue.main.async {
-                if success {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
-                        tabBarController.modalPresentationStyle = .fullScreen
-                        self?.present(tabBarController, animated: true, completion: nil)
-                    }
-                } else {
-                    self?.showMessage(String(describing: error))
-                }
-            }
-        }
+        loginViewModel.login(email: email ?? "", password: password ?? "")        
     }
     
     @IBAction func createAccountButtonTapped(_ sender: Any) {
@@ -90,4 +78,20 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         present(alert, animated: true, completion: nil)
     }
     
+    func didLoginSuccessfully() {
+        DispatchQueue.main.async {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+                tabBarController.modalPresentationStyle = .fullScreen
+                self.present(tabBarController, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func didFailToLogin(error: String) {
+        DispatchQueue.main.async {
+            self.showMessage(error)
+        }
+    }
 }
+

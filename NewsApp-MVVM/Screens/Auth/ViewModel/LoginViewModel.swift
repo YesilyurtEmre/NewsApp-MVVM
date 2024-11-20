@@ -9,7 +9,14 @@ import Foundation
 import FirebaseAuth
 import UIKit
 
+protocol LoginViewModelDelegate: AnyObject {
+    func didLoginSuccessfully()
+    func didFailToLogin(error: String)
+}
+
 class LoginViewModel {
+    
+    weak var delegate: LoginViewModelDelegate?
     
     func nextResponder(for textField: UITextField, textFieldOrder: [UITextField]) -> UITextField? {
         guard let index = textFieldOrder.firstIndex(of: textField), index < textFieldOrder.count - 1 else {
@@ -25,12 +32,25 @@ class LoginViewModel {
         ]
     }
     
-    func login(email: String, password: String, completion: @escaping (Bool, Error?) -> Void) {
-        AuthManager.shared.loginUser(email: email, password: password) { isSuccess, error in
+    func validateFields(email: String?, password: String?) -> String? {
+        if email == nil || email!.isEmpty {
+            return Constants.emptyEmail
+        }
+        
+        if password == nil || password!.isEmpty {
+            return Constants.emptyPassword
+        }
+        
+        return nil
+    }
+    
+    func login(email: String, password: String) {
+        AuthManager.shared.loginUser(email: email, password: password) { [weak self] isSuccess, error in
             if isSuccess {
-                completion(isSuccess, nil)
+                self?.delegate?.didLoginSuccessfully()
             } else {
-                completion(false, error)
+                let errorMessage = error?.localizedDescription ?? "Giriş başarısız!"
+                self?.delegate?.didFailToLogin(error: errorMessage)
             }
         }
     }

@@ -9,7 +9,14 @@ import Foundation
 import FirebaseAuth
 import UIKit
 
+protocol CreateAccountViewModelDelegate: AnyObject {
+    func didValidateFields(success: Bool, errorMessage: String?)
+    func didCreateAccount(success: Bool, message: String?)
+}
+
 class CreateAccountViewModel {
+    
+    weak var delegate: CreateAccountViewModelDelegate?
     
     func nextResponder(for textField: UITextField, in textFields: [UITextField]) -> UITextField? {
         guard let index = textFields.firstIndex(of: textField), index < textFields.count - 1 else {
@@ -27,29 +34,32 @@ class CreateAccountViewModel {
         ]
     }
     
-    func validateFields(email: String?, password: String?, confirmPassword: String?) -> (isValid: Bool, errorMessage: String?) {
+    func validateFields(email: String?, password: String?, confirmPassword: String?) {
         
         guard let email = email, !email.isEmpty,
               let password = password, !password.isEmpty,
               let confirmPassword = confirmPassword, !confirmPassword.isEmpty else {
-            return (false, Constants.requiredFields)
+            delegate?.didValidateFields(success: false, errorMessage: Constants.requiredFields)
+            
+            return
         }
         
         guard password == confirmPassword else {
-            return (false, Constants.passwordMismatch)
+            delegate?.didValidateFields(success: false, errorMessage: Constants.passwordMismatch)
+            
+            return
         }
-        
-        return (true, nil)
+        delegate?.didValidateFields(success: true, errorMessage: nil)
     }
     
-    func createAccount(email: String, password: String, completion: @escaping (Bool, String?) -> Void) {
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+    func createAccount(email: String, password: String) {
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             if let error = error as NSError? {
-                let customMessage = self.handleFirebaseError(error)
-                completion(false, customMessage)
+                let customMessage = self?.handleFirebaseError(error)
+                self?.delegate?.didCreateAccount(success: false, message: customMessage)
                 return
             }
-            completion(true, nil)
+            self?.delegate?.didCreateAccount(success: true, message: nil)
         }
     }
     

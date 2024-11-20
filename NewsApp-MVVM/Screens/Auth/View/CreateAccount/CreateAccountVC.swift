@@ -8,7 +8,8 @@
 import UIKit
 import FirebaseAuth
 
-class CreateAccountVC: UIViewController, UITextFieldDelegate {
+class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewModelDelegate {
+    
     @IBOutlet weak var signUpTitleLbl: UILabel!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
@@ -21,6 +22,7 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        createAccountViewModel.delegate = self
         textFields = [nameTextField, emailTextField, passwordTextField, confirmPasswordTextField]
         configureTextFields()
         
@@ -58,26 +60,28 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func createAccountButtonTapped(_ sender: Any) {
-        let validation = createAccountViewModel.validateFields(
+        createAccountViewModel.validateFields(
             email: emailTextField.text,
             password: passwordTextField.text,
             confirmPassword: confirmPasswordTextField.text
         )
-        
-        guard validation.isValid else {
-            showMessage(validation.errorMessage ?? Constants.loginError)
-            return
+    }
+    
+    func didValidateFields(success: Bool, errorMessage: String?) {
+        if success {
+            guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+            createAccountViewModel.createAccount(email: email, password: password)
+        } else {
+            showMessage(errorMessage ?? Constants.loginError)
         }
-        
-        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
-        
-        createAccountViewModel.createAccount(email: email, password: password) { [weak self] success, message in
-            DispatchQueue.main.async {
-                if success {
-                    self?.showMessage(Constants.registrationSuccess)
-                } else {
-                    self?.showMessage(message ?? Constants.loginError)
-                }
+    }
+    
+    func didCreateAccount(success: Bool, message: String?) {
+        DispatchQueue.main.async {
+            if success {
+                self.showMessage(Constants.registrationSuccess)
+            } else {
+                self.showMessage(message ?? Constants.loginError)
             }
         }
     }
