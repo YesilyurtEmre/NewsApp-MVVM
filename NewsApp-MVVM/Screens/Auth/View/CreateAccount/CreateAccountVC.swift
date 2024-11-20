@@ -16,10 +16,12 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     
     let createAccountViewModel = CreateAccountViewModel()
+    private var textFields: [UITextField] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        textFields = [nameTextField, emailTextField, passwordTextField, confirmPasswordTextField]
         configureTextFields()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -27,12 +29,8 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == nameTextField {
-            emailTextField.becomeFirstResponder()
-        } else if textField == emailTextField {
-            passwordTextField.becomeFirstResponder()
-        } else if textField == passwordTextField {
-            confirmPasswordTextField.becomeFirstResponder()
+        if let nextField = createAccountViewModel.nextResponder(for: textField, in: textFields) {
+            nextField.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
         }
@@ -40,15 +38,14 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate {
     }
     
     private func configureTextFields() {
-        nameTextField.delegate = self
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        confirmPasswordTextField.delegate = self
+        let placeholders = createAccountViewModel.placeholders()
         
-        nameTextField.setDynamicPlaceholder("Adınızı girin")
-        emailTextField.setDynamicPlaceholder("E-posta adresinizi girin")
-        passwordTextField.setDynamicPlaceholder("Şifrenizi girin")
-        confirmPasswordTextField.setDynamicPlaceholder("Şifrenizi tekrar girin")
+        for (index, textField) in textFields.enumerated() {
+            textField.delegate = self
+            if index < placeholders.count {
+                textField.setDynamicPlaceholder(placeholders[index])
+            }
+        }
     }
     
     @objc func dismissKeyboard() {

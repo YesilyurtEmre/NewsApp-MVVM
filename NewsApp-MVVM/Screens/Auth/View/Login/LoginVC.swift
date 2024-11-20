@@ -13,10 +13,12 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTextfield: UITextField!
     
     let loginViewModel = LoginViewModel()
+    private var textFields: [UITextField] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        textFields = [emailTextfield, passwordTextfield]
         configureTextFields()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -24,20 +26,24 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == emailTextfield {
-            passwordTextfield.becomeFirstResponder()
-        } else if textField == passwordTextfield {
+        if let nextField = loginViewModel.nextResponder(for: textField, textFieldOrder: textFields) {
+            nextField.becomeFirstResponder()
+        } else {
             textField.resignFirstResponder()
         }
         return true
     }
     
     private func configureTextFields() {
-        emailTextfield.delegate = self
-        passwordTextfield.delegate = self
+        let placeholders = loginViewModel.placeholders()
         
-        emailTextfield.setDynamicPlaceholder("E-posta adresinizi girin")
-        passwordTextfield.setDynamicPlaceholder("Şifrenizi girin")
+        for (index, textField) in textFields.enumerated() {
+            textField.delegate = self
+            if index < placeholders.count {
+                textField.setDynamicPlaceholder(placeholders[index])
+            }
+        }
+        
     }
     
     @objc func dismissKeyboard() {

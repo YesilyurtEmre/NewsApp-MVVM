@@ -7,8 +7,25 @@
 
 import Foundation
 import FirebaseAuth
+import UIKit
 
 class CreateAccountViewModel {
+    
+    func nextResponder(for textField: UITextField, in textFields: [UITextField]) -> UITextField? {
+        guard let index = textFields.firstIndex(of: textField), index < textFields.count - 1 else {
+            return nil
+        }
+        return textFields[index + 1]
+    }
+    
+    func placeholders() -> [String] {
+        return [
+            "Adınızı girin",
+            "E-posta adresinizi girin",
+            "Şifrenizi girin",
+            "Şifrenizi tekrar girin"
+        ]
+    }
     
     func validateFields(email: String?, password: String?, confirmPassword: String?) -> (isValid: Bool, errorMessage: String?) {
         
