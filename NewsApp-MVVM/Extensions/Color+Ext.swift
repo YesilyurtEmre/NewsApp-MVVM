@@ -21,4 +21,8 @@ extension UIColor {
         
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
+    
+    static let newsLabelColor = UIColor("#090816")
+    static let categoryCellViewColor = UIColor("#ECECEC")
+    static let categoryCellLabelColor = UIColor("#9C9C9C")
 }

@@ -110,18 +110,8 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = categoryCollectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
         let category = Categories(rawValue: indexPath.item)
-        
-        if category == viewModel.selectedCategory {
-            cell.categoryCellView.backgroundColor = .white
-            cell.categoryCellLbl.text = category?.title
-            cell.categoryCellLbl.textColor = .black
-        } else {
-            cell.categoryCellView.backgroundColor = UIColor("#ECECEC")
-            cell.categoryCellLbl.text = category?.title
-            cell.categoryCellLbl.textColor = UIColor("#9C9C9C")
-        }
-        
-        cell.categoryCellLbl.lineBreakMode = .byWordWrapping
+        let isSelected = category == viewModel.selectedCategory
+        cell.configureCell(with: category!, isSelected: isSelected)
         return cell
     }
     
@@ -129,7 +119,6 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         let previousIndexPath = viewModel.selectedCategoryIndex
         viewModel.selectedCategoryIndex = indexPath
         viewModel.selectedCategory = Categories(rawValue: indexPath.item)!
-        
         fetchNewsData()
         
         UIView.performWithoutAnimation {

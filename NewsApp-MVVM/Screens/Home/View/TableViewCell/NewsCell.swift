@@ -69,16 +69,13 @@ class NewsCell: UITableViewCell {
         tagTitleLbl.text = newsItem.source
         newsTitleLbl.text = newsItem.name
         newsTitleLbl.textColor = .black
-        newsTitleLbl.font = UIFont(name: "Montserrat-Light", size: 12)
         newsTitleLbl.numberOfLines = 2
         newsTitleLbl.lineBreakMode = .byTruncatingTail
-        newsTitleLbl.textColor = UIColor("#090816")
-        newsTitleLbl.font = UIFont(name: "Montserrat-Medium", size: 16)
+        newsTitleLbl.textColor = UIColor.newsLabelColor
         newsDescLbl.numberOfLines = 3
         newsDescLbl.lineBreakMode = .byTruncatingTail
         newsDescLbl.text = newsItem.description
-        newsDescLbl.textColor = UIColor("#090816")
-        newsDescLbl.font = UIFont(name: "Montserrat-Regular", size: 14)
+        newsDescLbl.textColor = UIColor.newsLabelColor
         
         if let imageUrl = URL(string: newsItem.image) {
             newsImageView.af.setImage(withURL: imageUrl, placeholderImage: UIImage(named: "placeholder"))

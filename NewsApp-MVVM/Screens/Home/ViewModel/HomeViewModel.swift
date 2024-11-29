@@ -75,7 +75,7 @@ class HomeViewModel {
             newsItems[index].isFavorite = newsItem.isFavorite
         }
     }
-
+    
     func getCategoriesCount() -> Int {
         Categories.allCases.count
     }

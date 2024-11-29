@@ -14,7 +14,18 @@ class CategoryCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-       
     }
-
+    
+    func configureCell(with category: Categories, isSelected: Bool) {
+        if isSelected {
+            categoryCellView.backgroundColor = .white
+            categoryCellLbl.textColor = .black
+        } else {
+            categoryCellView.backgroundColor = UIColor.categoryCellViewColor
+            categoryCellLbl.textColor = UIColor.categoryCellLabelColor
+        }
+        categoryCellLbl.text = category.title
+        categoryCellLbl.lineBreakMode = .byWordWrapping
+    }
+    
 }
