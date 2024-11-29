@@ -72,23 +72,36 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewM
             guard let email = emailTextField.text, let password = passwordTextField.text else { return }
             createAccountViewModel.createAccount(email: email, password: password)
         } else {
-            showMessage(errorMessage ?? Constants.loginError)
+            showMessage(errorMessage ?? Constants.loginError, shouldNavigate: false)
         }
     }
+    
+    private func navigateToHomeVC() {
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        if let homeVC = storyboard.instantiateViewController(withIdentifier: "HomeVC") as? HomeVC {
+            homeVC.modalPresentationStyle = .fullScreen
+            self.present(homeVC, animated: true, completion: nil)
+        }
+    }
+    
     
     func didCreateAccount(success: Bool, message: String?) {
         DispatchQueue.main.async {
             if success {
-                self.showMessage(Constants.registrationSuccess)
+                self.showMessage(Constants.registrationSuccess, shouldNavigate: true)
             } else {
-                self.showMessage(message ?? Constants.loginError)
+                self.showMessage(message ?? Constants.loginError, shouldNavigate: false)
             }
         }
     }
     
-    private func showMessage(_ message: String) {
+    private func showMessage(_ message: String, shouldNavigate: Bool) {
         let alert = UIAlertController(title: "Bilgi", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Tamam", style: .default) { _ in
+            if shouldNavigate {
+                self.navigateToHomeVC()
+            }
+        })
         present(alert, animated: true, completion: nil)
     }
 }
