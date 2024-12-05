@@ -67,12 +67,15 @@ class NewsCell: UITableViewCell {
     func configureCell(newsItem: NewsItem) {
         self.newsItem = newsItem
         tagTitleLbl.text = newsItem.source
+        tagTitleLbl.font = UIFont.montserrat(.light, size: 14)
         newsTitleLbl.text = newsItem.name
+        newsTitleLbl.font = UIFont.montserrat(.medium, size: 18)
         newsTitleLbl.textColor = .black
         newsTitleLbl.numberOfLines = 2
         newsTitleLbl.lineBreakMode = .byTruncatingTail
         newsTitleLbl.textColor = UIColor.newsLabelColor
         newsDescLbl.numberOfLines = 3
+        newsDescLbl.font = UIFont.montserrat(.regular, size: 16)
         newsDescLbl.lineBreakMode = .byTruncatingTail
         newsDescLbl.text = newsItem.description
         newsDescLbl.textColor = UIColor.newsLabelColor

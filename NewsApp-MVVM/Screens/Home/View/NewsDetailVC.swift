@@ -38,8 +38,11 @@ class NewsDetailVC: BaseVC {
         }
         
         detailTagLbl.text = viewModel.newsSource
+        detailTagLbl.font = UIFont.montserrat(.light, size: 14)
         detailTitleLbl.text = viewModel.newsTitle
+        detailTitleLbl.font = UIFont.montserrat(.medium, size: 18)
         detailDescLbl.text = viewModel.newsDescription
+        detailDescLbl.font = UIFont.montserrat(.regular, size: 16)
     }
     
     @objc func backButtonTapped() {
