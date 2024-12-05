@@ -24,6 +24,12 @@ class SearchVC: UIViewController {
         setupSearchBarView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        textField.text = ""
+        viewModel.searchNews(searchText: "")
+        searchIcon.image = UIImage(systemName: "magnifyingglass")
+    }
     
     private func setupSearchBarView() {
         textField.placeholder = "Ara"
