@@ -13,6 +13,8 @@ class FavoriteNewsManager {
     private let db = Firestore.firestore()
     private let collectionName = "FavoriteNews"
     
+    private(set) var favorites: [NewsItem] = []
+    
     private init() {}
     
     // MARK: - Add Favorite News
@@ -28,7 +30,10 @@ class FavoriteNewsManager {
             "userId": news.userId ?? ""
         ]
         db.collection(collectionName).document(news.id.uuidString).setData(docData) { error in
-            NotificationCenter.default.post(name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
+            if error == nil {
+                self.favorites.append(news)
+                NotificationCenter.default.post(name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
+            }
             completion(error)
         }
     }
@@ -36,6 +41,10 @@ class FavoriteNewsManager {
     // MARK: - Remove Favorite News
     func removeFavorite(newsID: String, completion: @escaping (Error?) -> Void) {
         db.collection(collectionName).document(newsID).delete { error in
+            if error == nil {
+                self.favorites.removeAll { $0.id.uuidString == newsID }
+                NotificationCenter.default.post(name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
+            }
             completion(error)
         }
         
@@ -64,8 +73,8 @@ class FavoriteNewsManager {
                     return
                 }
             }
+            self.favorites = newsItems
             completion(newsItems, nil)
         }
     }
-    
 }

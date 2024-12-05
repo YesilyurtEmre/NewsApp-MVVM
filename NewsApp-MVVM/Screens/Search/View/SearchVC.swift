@@ -24,6 +24,7 @@ class SearchVC: UIViewController {
         setupSearchBarView()
     }
     
+    
     private func setupSearchBarView() {
         textField.placeholder = "Ara"
         textField.translatesAutoresizingMaskIntoConstraints = false

@@ -26,7 +26,9 @@ class HomeVC: BaseVC {
     
     @objc func handleFavoriteStatusChanged(_ notification: Notification) {
         if let newsItem = notification.userInfo?["newsItem"] as? NewsItem {
-            viewModel.updateFavoriteStatus(for: newsItem)
+            if let index = viewModel.newsItems.firstIndex(where: { $0.key == newsItem.key }) {
+                viewModel.newsItems[index].isFavorite = newsItem.isFavorite
+            }
             newsTableView.reloadData()
         }
     }
@@ -39,7 +41,6 @@ class HomeVC: BaseVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
-        
     }
     
     func fetchNewsData() {

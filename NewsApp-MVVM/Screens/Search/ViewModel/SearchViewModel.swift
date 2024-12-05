@@ -28,7 +28,16 @@ final class SearchViewModel {
         APIServices.shared.fetchNews(category: Categories.general) { result in
             switch result {
             case .success(let newsResponse):
-                self.searchedNews = newsResponse
+                FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.userID ?? "") { favoriteNews, error in
+                    guard let favoriteNews = favoriteNews else { return }
+                    let favoriteNamesSet = Set(favoriteNews.compactMap { $0.name })
+                    self.searchedNews = newsResponse.map { item -> NewsItem in
+                        var updatedItem = item
+                        updatedItem.isFavorite = favoriteNamesSet.contains(item.name)
+                        return updatedItem
+                    }
+                    self.delegate?.loadNews()
+                }
             case .failure(let error):
                 print("Fetch error \(error)")
             }
@@ -39,7 +48,12 @@ final class SearchViewModel {
         if searchText.isEmpty {
             filteredNews = []
         } else {
-            filteredNews = searchedNews.filter { $0.name.lowercased().contains(searchText.lowercased()) }
+            let favoriteNamesSet = Set(FavoriteNewsManager.shared.favorites.compactMap { $0.name })
+            filteredNews = searchedNews.filter { $0.name.lowercased().contains(searchText.lowercased()) }.map { item -> NewsItem in
+                var updatedItem = item
+                updatedItem.isFavorite = favoriteNamesSet.contains(item.name)
+                return updatedItem
+            }
         }
         delegate?.loadNews()
     }
@@ -47,5 +61,4 @@ final class SearchViewModel {
     func filteredNewsCount() -> Int {
         filteredNews.count
     }
-    
 }
