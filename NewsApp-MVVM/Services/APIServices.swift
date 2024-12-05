@@ -9,27 +9,27 @@
 
 import Foundation
 import Alamofire
+import Moya
 
 final class APIServices {
-
+    
     static let shared = APIServices()
+    private let provider = MoyaProvider<NewsService>()
     private init() {}
-
-    private let headers: HTTPHeaders = [
-        "content-type": "application/json",
-        "authorization": "apikey \(EndPoints.API_KEY)"
-    ]
-
+    
     func fetchNews(category: Categories, completion: @escaping (Result<[NewsItem], Error>) -> Void) {
-        let url = EndPoints.getNews(category.tag).url
-
-        AF.request(url, method: .get, headers: headers).responseDecodable(of: NewsResponse.self) { response in
-            switch response.result {
-            case .success(let newsResponse):
-                if newsResponse.success {
-                    completion(.success(newsResponse.result))
-                } else {
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "API hatası: Başarı durumu false."])
+        provider.request(.fetchNews(category: category)) { result in
+            switch result {
+            case .success(let response):
+                do {
+                    let newsResponse = try JSONDecoder().decode(NewsResponse.self, from: response.data)
+                    if newsResponse.success {
+                        completion(.success(newsResponse.result))
+                    } else {
+                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "API hatası: Başarı durumu false."])
+                        completion(.failure(error))
+                    }
+                } catch {
                     completion(.failure(error))
                 }
             case .failure(let error):

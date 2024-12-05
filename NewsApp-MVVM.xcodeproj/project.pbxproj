@@ -58,6 +58,10 @@
 		6FB3796C2CB3C9BF00AA8BF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FB3796B2CB3C9BF00AA8BF7 /* Assets.xcassets */; };
 		6FB3796F2CB3C9BF00AA8BF7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FB3796D2CB3C9BF00AA8BF7 /* LaunchScreen.storyboard */; };
 		6FC9FEBC2CC8C8EB00B6A7D9 /* NewsDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC9FEBB2CC8C8EB00B6A7D9 /* NewsDetailViewModel.swift */; };
+		6FE3329C2D0173C50038D7B8 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 6FE3329B2D0173C50038D7B8 /* CombineMoya */; };
+		6FE3329E2D0173C50038D7B8 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 6FE3329D2D0173C50038D7B8 /* Moya */; };
+		6FE332A02D0173C50038D7B8 /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 6FE3329F2D0173C50038D7B8 /* ReactiveMoya */; };
+		6FE332A22D0173C50038D7B8 /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 6FE332A12D0173C50038D7B8 /* RxMoya */; };
 		6FF327E72CBCE1EC0008247C /* NewsDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF327E62CBCE1EC0008247C /* NewsDetailVC.swift */; };
 /* End PBXBuildFile section */
 
@@ -117,9 +121,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FE332A22D0173C50038D7B8 /* RxMoya in Frameworks */,
 				6F36A78E2CB3E9AC00B1C283 /* Alamofire in Frameworks */,
 				6F36A7CC2CB3F2D600B1C283 /* FirebaseStorage in Frameworks */,
+				6FE3329E2D0173C50038D7B8 /* Moya in Frameworks */,
 				6F36A7962CB3E9F300B1C283 /* MaterialActivityIndicator in Frameworks */,
+				6FE3329C2D0173C50038D7B8 /* CombineMoya in Frameworks */,
+				6FE332A02D0173C50038D7B8 /* ReactiveMoya in Frameworks */,
 				6F36A7AC2CB3F2D600B1C283 /* FirebaseAuth in Frameworks */,
 				6F36A7B82CB3F2D600B1C283 /* FirebaseFirestore in Frameworks */,
 				6F36A7932CB3E9C000B1C283 /* AlamofireImage in Frameworks */,
@@ -455,6 +463,10 @@
 				6F36A7AB2CB3F2D600B1C283 /* FirebaseAuth */,
 				6F36A7B72CB3F2D600B1C283 /* FirebaseFirestore */,
 				6F36A7CB2CB3F2D600B1C283 /* FirebaseStorage */,
+				6FE3329B2D0173C50038D7B8 /* CombineMoya */,
+				6FE3329D2D0173C50038D7B8 /* Moya */,
+				6FE3329F2D0173C50038D7B8 /* ReactiveMoya */,
+				6FE332A12D0173C50038D7B8 /* RxMoya */,
 			);
 			productName = "NewsApp-MVVM";
 			productReference = 6FB3795F2CB3C9BE00AA8BF7 /* NewsApp-MVVM.app */;
@@ -489,6 +501,7 @@
 				6F36A7912CB3E9C000B1C283 /* XCRemoteSwiftPackageReference "AlamofireImage" */,
 				6F36A7942CB3E9F300B1C283 /* XCRemoteSwiftPackageReference "MaterialActivityIndicator" */,
 				6F36A7A02CB3F2D600B1C283 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				6FE3329A2D0173C50038D7B8 /* XCRemoteSwiftPackageReference "Moya" */,
 			);
 			productRefGroup = 6FB379602CB3C9BE00AA8BF7 /* Products */;
 			projectDirPath = "";
@@ -816,6 +829,14 @@
 				minimumVersion = 11.3.0;
 			};
 		};
+		6FE3329A2D0173C50038D7B8 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya#installation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -848,6 +869,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6F36A7A02CB3F2D600B1C283 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		6FE3329B2D0173C50038D7B8 /* CombineMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FE3329A2D0173C50038D7B8 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = CombineMoya;
+		};
+		6FE3329D2D0173C50038D7B8 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FE3329A2D0173C50038D7B8 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+		6FE3329F2D0173C50038D7B8 /* ReactiveMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FE3329A2D0173C50038D7B8 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = ReactiveMoya;
+		};
+		6FE332A12D0173C50038D7B8 /* RxMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6FE3329A2D0173C50038D7B8 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = RxMoya;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

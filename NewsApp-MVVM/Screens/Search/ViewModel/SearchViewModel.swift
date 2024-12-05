@@ -32,7 +32,6 @@ final class SearchViewModel {
             case .failure(let error):
                 print("Fetch error \(error)")
             }
-            
         }
     }
     
