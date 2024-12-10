@@ -11,7 +11,7 @@ import UIKit
 class FavoriteNewsManager {
     static let shared = FavoriteNewsManager()
     private let db = Firestore.firestore()
-    private let collectionName = "FavoriteNews"
+    private let collectionName = Constants.FirestoreKeys.collectionName
     
     private(set) var favorites: [NewsItem] = []
     
@@ -20,19 +20,19 @@ class FavoriteNewsManager {
     // MARK: - Add Favorite News
     func addFavorite(news: NewsItem, completion: @escaping (Error?) -> Void) {
         let docData: [String: String] = [
-            "id": news.id.uuidString,
-            "key": news.key,
-            "url": news.url,
-            "description": news.description,
-            "image": news.image,
-            "name": news.name,
-            "source": news.source,
-            "userId": news.userId ?? ""
+            Constants.FirestoreKeys.id: news.id.uuidString,
+            Constants.FirestoreKeys.key: news.key,
+            Constants.FirestoreKeys.url: news.url,
+            Constants.FirestoreKeys.description: news.description,
+            Constants.FirestoreKeys.image: news.image,
+            Constants.FirestoreKeys.name: news.name,
+            Constants.FirestoreKeys.source: news.source,
+            Constants.FirestoreKeys.userId: news.userId ?? ""
         ]
         db.collection(collectionName).document(news.id.uuidString).setData(docData) { error in
             if error == nil {
                 self.favorites.append(news)
-                NotificationCenter.default.post(name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
+                NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)
             }
             completion(error)
         }
@@ -43,7 +43,7 @@ class FavoriteNewsManager {
         db.collection(collectionName).document(newsID).delete { error in
             if error == nil {
                 self.favorites.removeAll { $0.id.uuidString == newsID }
-                NotificationCenter.default.post(name: NSNotification.Name("FavoriteNewsUpdated"), object: nil)
+                NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)
             }
             completion(error)
         }
@@ -64,11 +64,11 @@ class FavoriteNewsManager {
                     if let uuid = UUID(uuidString: document.documentID) {
                         newsItem.id = uuid
                     } else {
-                        print("Geçersiz UUID formatı: \(document.documentID)")
+                        print("\(Constants.Errors.invalidUUID) \(document.documentID)")
                     }
                     newsItems.append(newsItem)
                 } catch {
-                    print("Error decoding document: \(error)")
+                    print("\(Constants.Errors.decodingError) \(error)")
                     completion(nil, error)
                     return
                 }

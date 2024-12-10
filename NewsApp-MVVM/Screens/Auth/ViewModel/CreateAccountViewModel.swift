@@ -39,13 +39,13 @@ class CreateAccountViewModel {
         guard let email = email, !email.isEmpty,
               let password = password, !password.isEmpty,
               let confirmPassword = confirmPassword, !confirmPassword.isEmpty else {
-            delegate?.didValidateFields(success: false, errorMessage: Constants.requiredFields)
+            delegate?.didValidateFields(success: false, errorMessage: Constants.AuthMessages.requiredFields)
             
             return
         }
         
         guard password == confirmPassword else {
-            delegate?.didValidateFields(success: false, errorMessage: Constants.passwordMismatch)
+            delegate?.didValidateFields(success: false, errorMessage: Constants.AuthMessages.passwordMismatch)
             
             return
         }
@@ -65,15 +65,15 @@ class CreateAccountViewModel {
     
     private func handleFirebaseError(_ error: NSError) -> String {
         guard let errorCode = AuthErrorCode(rawValue: error.code) else {
-            return Constants.loginError
+            return Constants.AuthMessages.loginError
         }
         switch errorCode {
         case .invalidEmail:
-            return "Lütfen geçerli bir e-posta adresi girin."
+            return Constants.AuthMessages.invalidEmail
         case .emailAlreadyInUse:
-            return "Bu e-posta adresi zaten kullanılıyor."
+            return Constants.AuthMessages.alreadyInUse
         default:
-            return "Bir hata oluştu. Lütfen tekrar deneyin."
+            return Constants.AuthMessages.defaultError
         }
     }
 }

@@ -15,7 +15,7 @@ class SearchVC: UIViewController {
     var viewModel = SearchViewModel()
     
     let textField = UITextField()
-    let searchIcon = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+    let searchIcon = UIImageView(image: UIImage(systemName: Constants.SFSymbols.magnifyingGlass))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +28,7 @@ class SearchVC: UIViewController {
         super.viewWillAppear(animated)
         textField.text = ""
         viewModel.searchNews(searchText: "")
-        searchIcon.image = UIImage(systemName: "magnifyingglass")
+        searchIcon.image = UIImage(systemName: Constants.SFSymbols.magnifyingGlass)
     }
     
     private func setupSearchBarView() {
@@ -75,7 +75,7 @@ class SearchVC: UIViewController {
     @objc func searchIconTapped() {
         textField.text = ""
         viewModel.searchNews(searchText: "")
-        searchIcon.image = UIImage(systemName: "magnifyingglass")
+        searchIcon.image = UIImage(systemName: Constants.SFSymbols.magnifyingGlass)
         viewModel.isSearching = false
     }
     
@@ -86,15 +86,15 @@ class SearchVC: UIViewController {
     private func configureTableView() {
         searchTableView.dataSource = self
         searchTableView.delegate = self
-        searchTableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier: "NewsCell")
+        searchTableView.register(UINib(nibName: Constants.CellIdentifiers.newsCell, bundle: nil), forCellReuseIdentifier: Constants.CellIdentifiers.newsCell)
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         if let searchText = textField.text {
             viewModel.searchNews(searchText: searchText)
             searchIcon.image = searchText.isEmpty ?
-            UIImage(systemName: "magnifyingglass") :
-            UIImage(systemName: "xmark.circle")
+            UIImage(systemName: Constants.SFSymbols.magnifyingGlass) :
+            UIImage(systemName: Constants.SFSymbols.closeCircle)
         }
     }
 }
@@ -106,7 +106,7 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.CellIdentifiers.newsCell, for: indexPath) as! NewsCell
         let searchNews = viewModel.filteredNews[indexPath.row]
         cell.configureCell(newsItem: searchNews)
         return cell

@@ -49,7 +49,7 @@ class FavoritesVC: UIViewController {
     private func configureTableView() {
         favTableView.dataSource = self
         favTableView.delegate = self
-        favTableView.register(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier: "NewsCell")
+        favTableView.register(UINib(nibName: Constants.CellIdentifiers.newsCell, bundle: nil), forCellReuseIdentifier: Constants.CellIdentifiers.newsCell)
     }
 }
 
@@ -59,7 +59,7 @@ extension FavoritesVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.CellIdentifiers.newsCell, for: indexPath) as! NewsCell
         let newsItem = viewModel.favoriteNews[indexPath.row]
         cell.configureCell(newsItem: newsItem)
         return cell

@@ -42,8 +42,8 @@ extension LogoutVC: UITableViewDelegate, UITableViewDataSource {
                                       preferredStyle: .alert)
         
         let confirmAction = UIAlertAction(title: viewModel.confirmButtonTitle, style: .default) { _ in
-            let storyboard = UIStoryboard(name: "Login", bundle: nil)
-            if let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginVC") as? LoginVC {
+            let storyboard = UIStoryboard(name: Constants.StoryboardIdentifiers.LoginStoryboard, bundle: nil)
+            if let loginVC = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardIdentifiers.LoginVC) as? LoginVC {
                 loginVC.modalPresentationStyle = .fullScreen
                 self.present(loginVC, animated: true, completion: nil)
             }

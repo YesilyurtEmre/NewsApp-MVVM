@@ -80,7 +80,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = newsTableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
+        let cell = newsTableView.dequeueReusableCell(withIdentifier: Constants.CellIdentifiers.newsCell, for: indexPath) as! NewsCell
         let newsItem = viewModel.newsItems[indexPath.row]
         cell.configureCell(newsItem: newsItem)
         return cell
@@ -109,7 +109,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = categoryCollectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
+        let cell = categoryCollectionView.dequeueReusableCell(withReuseIdentifier: Constants.CellIdentifiers.categoryCell, for: indexPath) as! CategoryCell
         let category = Categories(rawValue: indexPath.item)
         let isSelected = category == viewModel.selectedCategory
         cell.configureCell(with: category!, isSelected: isSelected)

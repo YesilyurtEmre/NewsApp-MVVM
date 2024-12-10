@@ -65,8 +65,8 @@ class LoginVC: UIViewController, UITextFieldDelegate, LoginViewModelDelegate {
     }
     
     @IBAction func createAccountButtonTapped(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "CreateAccount", bundle: nil)
-        if let createAccountVC = storyboard.instantiateViewController(withIdentifier: "CreateAccountVC") as? CreateAccountVC {
+        let storyboard = UIStoryboard(name: Constants.StoryboardIdentifiers.createAccountStoryboard, bundle: nil)
+        if let createAccountVC = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardIdentifiers.createAccountVC) as? CreateAccountVC {
             createAccountVC.modalPresentationStyle = .fullScreen
             present(createAccountVC, animated: true, completion: nil)
         }
@@ -80,8 +80,8 @@ class LoginVC: UIViewController, UITextFieldDelegate, LoginViewModelDelegate {
     
     func didLoginSuccessfully() {
         DispatchQueue.main.async {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let tabBarController = storyboard.instantiateViewController(withIdentifier: "TabBarController") as? UITabBarController {
+            let storyboard = UIStoryboard(name: Constants.StoryboardIdentifiers.mainStoryboard, bundle: nil)
+            if let tabBarController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardIdentifiers.tabBarController) as? UITabBarController {
                 tabBarController.modalPresentationStyle = .fullScreen
                 self.present(tabBarController, animated: true, completion: nil)
             }

@@ -36,17 +36,17 @@ class AuthManager {
     
     func handleErrorMessage(_ error: NSError) -> String {
         guard let errorCode = AuthErrorCode(rawValue: error.code) else {
-            return Constants.loginError
+            return Constants.AuthMessages.loginError
         }
         switch errorCode {
         case .invalidEmail:
-            return Constants.invalidEmail
+            return Constants.AuthMessages.invalidEmail
         case .userNotFound:
-            return Constants.userNotFound
+            return Constants.AuthMessages.userNotFound
         case .wrongPassword:
-            return Constants.wrongPassword
+            return Constants.AuthMessages.wrongPassword
         default:
-            return Constants.defaultError
+            return Constants.AuthMessages.defaultError
         }
     }
 }

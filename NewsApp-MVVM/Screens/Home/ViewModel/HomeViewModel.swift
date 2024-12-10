@@ -25,22 +25,17 @@ class HomeViewModel {
     init() {
         fetchNews()
     }
-    struct CellIdentifiers {
-        static let newsCell = "NewsCell"
-        static let categoryCell = "CategoryCell"
-    }
-    
     
     func selectNewsItem(at indexPath: IndexPath) {
         selectedNewsItem = newsItems[indexPath.row]
     }
     
     func registerCells(for collectionView: UICollectionView, and tableView: UITableView) {
-        let categoryNib = UINib(nibName: "CategoryCell", bundle: nil)
-        collectionView.register(categoryNib, forCellWithReuseIdentifier: CellIdentifiers.categoryCell)
+        let categoryNib = UINib(nibName: Constants.CellIdentifiers.categoryCell, bundle: nil)
+        collectionView.register(categoryNib, forCellWithReuseIdentifier: Constants.CellIdentifiers.categoryCell)
         
-        let newsNib = UINib(nibName: "NewsCell", bundle: nil)
-        tableView.register(newsNib, forCellReuseIdentifier: CellIdentifiers.newsCell)
+        let newsNib = UINib(nibName: Constants.CellIdentifiers.newsCell, bundle: nil)
+        tableView.register(newsNib, forCellReuseIdentifier: Constants.CellIdentifiers.newsCell)
         
     }
     

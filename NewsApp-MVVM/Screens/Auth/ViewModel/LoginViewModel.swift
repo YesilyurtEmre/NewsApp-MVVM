@@ -34,11 +34,11 @@ class LoginViewModel {
     
     func validateFields(email: String?, password: String?) -> String? {
         if email == nil || email!.isEmpty {
-            return Constants.emptyEmail
+            return Constants.AuthMessages.emptyEmail
         }
         
         if password == nil || password!.isEmpty {
-            return Constants.emptyPassword
+            return Constants.AuthMessages.emptyPassword
         }
         
         return nil
