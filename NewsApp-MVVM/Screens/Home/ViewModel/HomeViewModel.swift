@@ -12,7 +12,7 @@ protocol HomeViewModelProtocol: AnyObject {
     func reloadData()
 }
 
-class HomeViewModel {
+final class HomeViewModel {
     var newsItems: [NewsItem] = []
     var news: NewsItem?
     var selectedCategory: Categories = .general

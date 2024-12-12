@@ -7,37 +7,42 @@
 
 import UIKit
 
-class LoginVC: UIViewController, UITextFieldDelegate, LoginViewModelDelegate {
+class LoginVC: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var LoginTitleLbl: UILabel!
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
     
-    let loginViewModel = LoginViewModel()
+    private lazy var loginViewModel = LoginViewModel()
     private var textFields: [UITextField] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loginViewModel.delegate = self
         textFields = [emailTextfield, passwordTextfield]
+        loginViewModel.delegate = self
+        emailTextfield.delegate = self
+        passwordTextfield.delegate = self
         configureTextFields()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let nextField = loginViewModel.nextResponder(for: textField, textFieldOrder: textFields) {
-            nextField.becomeFirstResponder()
-        } else {
-            textField.resignFirstResponder()
-        }
-        return true
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
+    private func placeholders() -> [String] {
+        return [
+            "E-posta adresinizi girin",
+            "Şifrenizi girin"
+        ]
+    }
+    
+    //Move to VM
     private func configureTextFields() {
-        let placeholders = loginViewModel.placeholders()
+        let placeholders = placeholders()
         
         for (index, textField) in textFields.enumerated() {
             textField.delegate = self
@@ -45,25 +50,20 @@ class LoginVC: UIViewController, UITextFieldDelegate, LoginViewModelDelegate {
                 textField.setDynamicPlaceholder(placeholders[index])
             }
         }
-        
     }
     
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return loginViewModel.textFieldShouldReturn(textField, textFieldOrder: textFields)
     }
+    
     
     @IBAction func loginButtonTapped(_ sender: Any) {
         let email = emailTextfield.text
         let password = passwordTextfield.text
-        
-        if let validationError = loginViewModel.validateFields(email: email, password: password) {
-            showMessage(validationError)
-            return
-        }
-        
-        loginViewModel.login(email: email ?? "", password: password ?? "")        
+        loginViewModel.handleLogin(email: email, password: password)
     }
     
+    // TODO: - Move to VM
     @IBAction func createAccountButtonTapped(_ sender: Any) {
         let storyboard = UIStoryboard(name: Constants.StoryboardIdentifiers.createAccountStoryboard, bundle: nil)
         if let createAccountVC = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardIdentifiers.createAccountVC) as? CreateAccountVC {
@@ -72,11 +72,15 @@ class LoginVC: UIViewController, UITextFieldDelegate, LoginViewModelDelegate {
         }
     }
     
+    
     private func showMessage(_ message: String) {
         let alert = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+}
+
+extension LoginVC: LoginViewModelDelegate {
     
     func didLoginSuccessfully() {
         DispatchQueue.main.async {

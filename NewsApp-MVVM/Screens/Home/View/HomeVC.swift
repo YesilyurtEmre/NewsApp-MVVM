@@ -7,12 +7,12 @@
 
 import UIKit
 
-class HomeVC: BaseVC {
+ final class HomeVC: BaseVC {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     @IBOutlet weak var newsTableView: UITableView!
     
-    var viewModel = HomeViewModel()
+   private lazy var viewModel = HomeViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +51,7 @@ class HomeVC: BaseVC {
         }
     }
     
-    private func configureCollectionView() {
+     private func configureCollectionView() {
         
         categoryCollectionView.dataSource = self
         categoryCollectionView.delegate = self

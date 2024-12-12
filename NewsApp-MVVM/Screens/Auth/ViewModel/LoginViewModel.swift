@@ -14,7 +14,13 @@ protocol LoginViewModelDelegate: AnyObject {
     func didFailToLogin(error: String)
 }
 
-class LoginViewModel {
+protocol LoginViewModelInterface {
+    
+    func textFieldShouldReturn(_ textField: UITextField, textFieldOrder: [UITextField]) -> Bool
+    func handleLogin(email: String?, password: String?)
+}
+
+final class LoginViewModel {
     
     weak var delegate: LoginViewModelDelegate?
     
@@ -25,12 +31,6 @@ class LoginViewModel {
         return textFieldOrder[index + 1]
     }
     
-    func placeholders() -> [String] {
-        return [
-            "E-posta adresinizi girin",
-            "Şifrenizi girin"
-        ]
-    }
     
     func validateFields(email: String?, password: String?) -> String? {
         if email == nil || email!.isEmpty {
@@ -44,6 +44,7 @@ class LoginViewModel {
         return nil
     }
     
+    
     func login(email: String, password: String) {
         AuthManager.shared.loginUser(email: email, password: password) { [weak self] isSuccess, error in
             if isSuccess {
@@ -53,5 +54,27 @@ class LoginViewModel {
                 self?.delegate?.didFailToLogin(error: errorMessage)
             }
         }
+    }
+}
+
+
+extension LoginViewModel: LoginViewModelInterface {
+    
+    func handleLogin(email: String?, password: String?) {
+        if let validationError = validateFields(email: email, password: password) {
+            delegate?.didFailToLogin(error: validationError)
+            return
+        }
+        login(email: email ?? "", password: password ?? "")
+    }
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField, textFieldOrder: [UITextField]) -> Bool {
+        if let nextField = nextResponder(for: textField, textFieldOrder: textFieldOrder) {
+            nextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return true
     }
 }
