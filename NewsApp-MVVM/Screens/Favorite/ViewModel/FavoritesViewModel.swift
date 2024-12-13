@@ -24,7 +24,7 @@ final class FavoritesViewModel {
     var onError: ((Error) -> Void)?
     
     func loadFavorites() {
-        FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.userID ?? "") { [weak self] favoriteNews, error in
+        FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.email ?? "") { [weak self] favoriteNews, error in
             guard let favoriteNews = favoriteNews else { return }
             let updatedItems = favoriteNews.map { item -> NewsItem in
                 var updatedItem = item

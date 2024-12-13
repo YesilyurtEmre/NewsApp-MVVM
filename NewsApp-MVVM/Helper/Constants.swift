@@ -27,6 +27,7 @@ struct Constants {
     struct Errors {
         static let invalidUUID = "Geçersiz UUID formatı:"
         static let decodingError = "Error decoding document:"
+        static let firestoreError = "Firestore error:"
     }
     
     struct FirestoreKeys {
@@ -38,7 +39,7 @@ struct Constants {
         static let image = "image"
         static let name = "name"
         static let source = "source"
-        static let userId = "userId"
+        static let email = "email"
     }
     
     struct StoryboardIdentifiers {

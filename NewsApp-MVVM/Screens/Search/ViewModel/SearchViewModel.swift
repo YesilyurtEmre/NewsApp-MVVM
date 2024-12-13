@@ -28,7 +28,7 @@ final class SearchViewModel {
         APIServices.shared.fetchNews(category: Categories.general) { result in
             switch result {
             case .success(let newsResponse):
-                FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.userID ?? "") { favoriteNews, error in
+                FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.email ?? "") { favoriteNews, error in
                     guard let favoriteNews = favoriteNews else { return }
                     let favoriteNamesSet = Set(favoriteNews.compactMap { $0.name })
                     self.searchedNews = newsResponse.map { item -> NewsItem in

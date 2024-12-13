@@ -21,7 +21,8 @@ struct NewsItem: Codable {
     let name: String
     let source: String
     var isFavorite: Bool = false
-    var userId: String?
+    var userEmail: String? 
+    
     
     enum CodingKeys: String, CodingKey {
         case key, url, description, image, name, source

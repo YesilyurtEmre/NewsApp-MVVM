@@ -7,6 +7,7 @@
 
 import FirebaseFirestore
 import UIKit
+import FirebaseAuth
 
 class FavoriteNewsManager {
     static let shared = FavoriteNewsManager()
@@ -19,6 +20,11 @@ class FavoriteNewsManager {
     
     // MARK: - Add Favorite News
     func addFavorite(news: NewsItem, completion: @escaping (Error?) -> Void) {
+        guard let userEmail = Auth.auth().currentUser?.email else {
+            print("Kullanıcı e-postası alınamadı.")
+            completion(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "User email not found"]))
+            return
+        }
         let docData: [String: String] = [
             Constants.FirestoreKeys.id: news.id.uuidString,
             Constants.FirestoreKeys.key: news.key,
@@ -27,7 +33,7 @@ class FavoriteNewsManager {
             Constants.FirestoreKeys.image: news.image,
             Constants.FirestoreKeys.name: news.name,
             Constants.FirestoreKeys.source: news.source,
-            Constants.FirestoreKeys.userId: news.userId ?? ""
+            Constants.FirestoreKeys.email: userEmail
         ]
         db.collection(collectionName).document(news.id.uuidString).setData(docData) { error in
             if error == nil {
@@ -51,12 +57,17 @@ class FavoriteNewsManager {
     }
     
     // MARK: - Load Favorite News
-    func loadFavorites(for userId: String, completion: @escaping ([NewsItem]?, Error?) -> Void) {
-        db.collection(collectionName).whereField("userId", isEqualTo: userId).getDocuments { snapshot, error in
+    func loadFavorites(for email: String, completion: @escaping ([NewsItem]?, Error?) -> Void) {
+        db.collection(collectionName).whereField("email", isEqualTo: email).getDocuments { snapshot, error in
             guard let documents = snapshot?.documents else {
-                completion(nil, error)
+                
+                let errorMessage = error?.localizedDescription ?? "Unknown error while fetching documents"
+                print("\(Constants.Errors.firestoreError) \(errorMessage)")
+                
+                completion(nil, error ?? NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
                 return
             }
+            
             var newsItems: [NewsItem] = []
             for document in documents {
                 do {
@@ -65,6 +76,8 @@ class FavoriteNewsManager {
                         newsItem.id = uuid
                     } else {
                         print("\(Constants.Errors.invalidUUID) \(document.documentID)")
+                        completion(nil, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid UUID: \(document.documentID)"]))
+                        return
                     }
                     newsItems.append(newsItem)
                 } catch {
@@ -74,6 +87,7 @@ class FavoriteNewsManager {
                 }
             }
             self.favorites = newsItems
+            print("Favorites loaded successfully for user: \(email)")
             completion(newsItems, nil)
         }
     }

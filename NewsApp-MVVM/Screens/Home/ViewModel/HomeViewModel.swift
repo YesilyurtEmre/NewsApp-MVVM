@@ -43,7 +43,7 @@ final class HomeViewModel {
         APIServices.shared.fetchNews(category: selectedCategory) { result in
             switch result {
             case .success(let items):
-                FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.userID ?? "") { favoriteNews, error in
+                FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.email ?? "") { favoriteNews, error in
                     guard let favoriteNews = favoriteNews else { return }
                     let favoriteNamesSet = Set(favoriteNews.compactMap { $0.name })
                     let updatedItems = items.map { item -> NewsItem in
