@@ -14,7 +14,6 @@ protocol HomeViewModelProtocol: AnyObject {
 
 final class HomeViewModel {
     var newsItems: [NewsItem] = []
-    var news: NewsItem?
     var selectedCategory: Categories = .general
     var selectedCategoryIndex: IndexPath?
     var selectedNewsItem: NewsItem?

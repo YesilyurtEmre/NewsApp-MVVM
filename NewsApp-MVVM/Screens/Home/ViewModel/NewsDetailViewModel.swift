@@ -6,8 +6,8 @@
 //
 import Foundation
 
-class NewsDetailViewModel {
-    var news: NewsItem?
+class NewsDetailViewModel: ObservableObject {
+    @Published var news: NewsItem?
     
     init(news: NewsItem) {
         self.news = news

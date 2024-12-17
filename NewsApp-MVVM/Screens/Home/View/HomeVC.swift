@@ -6,13 +6,14 @@
 //
 
 import UIKit
+import SwiftUI
 
- final class HomeVC: BaseVC {
+final class HomeVC: BaseVC {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     @IBOutlet weak var newsTableView: UITableView!
     
-   private lazy var viewModel = HomeViewModel()
+    private lazy var viewModel = HomeViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,27 @@ import UIKit
         viewModel.registerCells(for: categoryCollectionView, and: newsTableView)
         fetchNewsData()
         NotificationCenter.default.addObserver(self, selector: #selector(handleFavoriteStatusChanged(_:)), name: .favoriteStatusChanged, object: nil)
+        
+        let viewModel = SwiftUIViewModel()
+        let swiftUIView = HomeView(viewModel: SwiftUIViewModel())
+        
+        // HostingController ile SwiftUI görünümünü UIKit'e ekle
+        let hostingController = UIHostingController(rootView: swiftUIView)
+        addChild(hostingController)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        // SwiftUI görünümünü mevcut UIView'a ekle
+        view.addSubview(hostingController.view)
+        
+        // Auto Layout ayarları
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+        
+        hostingController.didMove(toParent: self)
     }
     
     @objc func handleFavoriteStatusChanged(_ notification: Notification) {
@@ -51,7 +73,7 @@ import UIKit
         }
     }
     
-     private func configureCollectionView() {
+    private func configureCollectionView() {
         
         categoryCollectionView.dataSource = self
         categoryCollectionView.delegate = self

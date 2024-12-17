@@ -12,7 +12,7 @@ struct NewsResponse: Codable {
     let result: [NewsItem]
 }
 
-struct NewsItem: Codable {
+struct NewsItem: Identifiable, Codable {
     var id = UUID()
     let key: String
     let url: String
