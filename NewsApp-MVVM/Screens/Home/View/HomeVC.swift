@@ -23,7 +23,10 @@ final class HomeVC: BaseVC {
         viewModel.registerCells(for: categoryCollectionView, and: newsTableView)
         fetchNewsData()
         NotificationCenter.default.addObserver(self, selector: #selector(handleFavoriteStatusChanged(_:)), name: .favoriteStatusChanged, object: nil)
-        
+        hostingControllerSetup()
+    }
+    
+    private func hostingControllerSetup() {
         let viewModel = SwiftUIViewModel()
         let swiftUIView = HomeView(viewModel: SwiftUIViewModel())
         
@@ -117,7 +120,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             if let indexPath = sender as? IndexPath,
                let detailVC = segue.destination as? NewsDetailVC {
                 let selectedNews = viewModel.getNewsItem(at: indexPath)
-                let detailViewModel = NewsDetailViewModel(news: selectedNews)
+                let detailViewModel = NewsDetailViewModel(news: selectedNews, isFavorite: true)
                 detailVC.viewModel = detailViewModel
             }
         }

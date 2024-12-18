@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct NewsDetailSwiftUI: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: NewsDetailViewModel
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 10) {
             if let imageUrl = viewModel.newsImageUrl {
                 AsyncImage(url: imageUrl) { image in
                     image.resizable()
@@ -29,28 +30,43 @@ struct NewsDetailSwiftUI: View {
             Text(viewModel.newsSource)
                 .font(.headline)
                 .foregroundColor(.secondary)
-                .padding()
+                .padding(.horizontal, 10)
+            
             Text(viewModel.newsTitle)
                 .font(.headline)
                 .foregroundColor(.primary)
-                .padding()
+                .padding(.horizontal, 10)
             
             Text(viewModel.newsDescription)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-                .lineLimit(2)
+                .padding(.horizontal, 10)
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundColor(.black)
+                }
+            }
         }
         .navigationTitle("News Detail")
         .font(.title2)
         .fontWeight(.heavy)
-        .padding(.top, 10)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical)
         .frame(maxWidth: .infinity, alignment: .top)
+        Spacer()
         
     }
 }
 
-//struct NewsDetailSwiftUI_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NewsDetailSwiftUI(viewModel: NewsDetailViewModel(news: NewsItem))
-//    }
+//#Preview {
+//    let news = NewsItem
+//    NewsDetailSwiftUI(viewModel: NewsDetailViewModel(news: NewsItem, isFavorite: false))
 //}
+//

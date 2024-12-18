@@ -8,9 +8,11 @@ import Foundation
 
 class NewsDetailViewModel: ObservableObject {
     @Published var news: NewsItem?
+    var isFavorite: Bool
     
-    init(news: NewsItem) {
+    init(news: NewsItem, isFavorite: Bool) {
         self.news = news
+        self.isFavorite = isFavorite
     }
     
     var newsTitle: String {

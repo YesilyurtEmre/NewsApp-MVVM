@@ -5,9 +5,10 @@
 //  Created by Emre Yeşilyurt on 17.12.2024.
 //
 
+
 import SwiftUI
 import Combine
-import Alamofire
+import FirebaseAuth
 
 final class SwiftUIViewModel: ObservableObject {
     
@@ -15,10 +16,19 @@ final class SwiftUIViewModel: ObservableObject {
     @Published var newsItems: [NewsItem] = []
     @Published var selectedCategory: Categories = .general
     @Published var selectedNewsItem: NewsItem?
-    @Published private var favoriteNews: [NewsItem] = []
     private var cancellables = Set<AnyCancellable>()
     
     init() {
+        fetchNews()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleFavoriteStatusChanged(_:)),
+            name: .favoriteStatusChanged,
+            object: nil
+        )
+    }
+    
+    @objc private func handleFavoriteStatusChanged(_ notification: Notification) {
         fetchNews()
     }
     
@@ -28,13 +38,28 @@ final class SwiftUIViewModel: ObservableObject {
             
             switch result {
             case .success(let items):
-                FavoriteNewsManager.shared.loadFavorites(for: AuthManager.shared.currentUser?.email ?? "") { favoriteNews, error in
-                    guard let favoriteNews = favoriteNews else { return }
+                guard let userEmail = Auth.auth().currentUser?.email else {
+                    print("User email not found")
+                    return
+                }
+                
+                FavoriteNewsManager.shared.loadFavorites(for: userEmail) { favoriteNews, error in
+                    guard let favoriteNews = favoriteNews else {
+                        if let error = error {
+                            print("Error loading favorites: \(error.localizedDescription)")
+                        }
+                        return
+                    }
                     
-                    let favoriteNamesSet = Set(favoriteNews.compactMap { $0.name })
+                    let favoriteKeys = Set(favoriteNews.compactMap { $0.name })
                     let updatedItems = items.map { item -> NewsItem in
                         var updatedItem = item
-                        updatedItem.isFavorite = favoriteNamesSet.contains(item.name)
+                        if favoriteKeys.contains(item.name) {
+                            updatedItem.isFavorite = true
+                        } else {
+                            updatedItem.isFavorite = false
+                        }
+                        
                         return updatedItem
                     }
                     
@@ -44,15 +69,32 @@ final class SwiftUIViewModel: ObservableObject {
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    print("error-\(error)")
+                    print("Error fetching news: \(error.localizedDescription)")
                 }
             }
         }
     }
     
-    func updateFavoriteStatus(for newsItem: NewsItem) {
+    func toggleFavorite(for newsItem: NewsItem) {
+
         if let index = newsItems.firstIndex(where: { $0.id == newsItem.id }) {
-            newsItems[index].isFavorite = newsItem.isFavorite
+            newsItems[index].isFavorite.toggle()
+            
+            if newsItems[index].isFavorite {
+                FavoriteNewsManager.shared.addFavorite(news: newsItems[index]) { error in
+                    if let error = error {
+                        print("Error adding favorite: \(error.localizedDescription)")
+                        self.newsItems[index].isFavorite = false
+                    }
+                }
+            } else {
+                FavoriteNewsManager.shared.removeFavorite(newsID: newsItems[index].id.uuidString) { error in
+                    if let error = error {
+                        print("Error removing favorite: \(error.localizedDescription)")
+                        self.newsItems[index].isFavorite = true
+                    }
+                }
+            }
         }
     }
     
@@ -72,6 +114,5 @@ final class SwiftUIViewModel: ObservableObject {
     func getNewsItem(at index: Int) -> NewsItem {
         return newsItems[index]
     }
-    
 }
 

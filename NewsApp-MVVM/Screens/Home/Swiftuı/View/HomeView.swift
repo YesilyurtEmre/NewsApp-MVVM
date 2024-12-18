@@ -31,13 +31,15 @@ struct HomeView: View {
                 }
             }
             List(viewModel.newsItems) { newsItem in
-                NavigationLink(destination: NewsDetailSwiftUI(viewModel: NewsDetailViewModel( news: newsItem))) {
-                    NewsRow(newsItem: newsItem)
+                NavigationLink(destination: NewsDetailSwiftUI(viewModel: NewsDetailViewModel( news: newsItem, isFavorite: newsItem.isFavorite))) {
+                    NewsRow(newsItem: newsItem) {
+                        viewModel.toggleFavorite(for: newsItem)
+                    }
                 }
             }
             .listStyle(.plain)
-            .padding(.horizontal)
-            Spacer()
+            .frame(maxWidth: .infinity)
+            .padding(.vertical)
         }
     }
     
@@ -57,7 +59,7 @@ struct HomeView: View {
             Text(category?.title ?? "")
                 .padding(.horizontal, 15)
                 .padding(.vertical, 5)
-                .background(isSelected ? .white : .black)
+                .background(isSelected ? .white : .gray)
                 .foregroundColor(isSelected ? .black : .white)
                 .cornerRadius(8)
                 .onTapGesture {
@@ -67,26 +69,51 @@ struct HomeView: View {
     }
     
     struct NewsRow: View {
-        @State var newsItem: NewsItem
+        @State var newsItem: NewsItem {
+            didSet {
+                updateFavImage()
+            }
+        }
+        @State private var favImage: UIImage?
+        var toggleFavorite: () -> Void
         
         var body: some View {
             VStack(alignment: .leading, spacing: 10) {
-                if let imageUrl = URL(string: newsItem.image) {
-                    AsyncImage(url: imageUrl) { image in
-                        image.resizable()
-                            .cornerRadius(8)
+                ZStack(alignment: .topTrailing) {
+                    if let imageUrl = URL(string: newsItem.image) {
+                        AsyncImage(url: imageUrl) { image in
+                            image.resizable()
+                                .cornerRadius(8)
+                                .aspectRatio(contentMode: .fit)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                    } else {
+                        Image(systemName: "photo")
+                            .resizable()
                             .aspectRatio(contentMode: .fit)
-                    } placeholder: {
-                        ProgressView()
                     }
-                } else {
-                    Image(systemName: "photo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
+                    
+                    Button(action: {
+                        favImageTapped()
+                        
+                    }) {
+                        Image(newsItem.isFavorite ? "SelectedFavorite" : "NonselectedFavorite")
+                            .resizable()
+                            .frame(width: 12, height: 24)
+                            .foregroundColor(newsItem.isFavorite ? .black : .white)
+                            .padding(8)
+                            .onTapGesture {
+                                favImageTapped()
+                            }
+                    }
                 }
+                
+                
                 Text(newsItem.source)
                     .font(.headline)
                     .foregroundColor(.secondary)
+                
                 Text(newsItem.name)
                     .font(.headline)
                     .foregroundColor(.primary)
@@ -96,6 +123,42 @@ struct HomeView: View {
                     .foregroundColor(.secondary)
                     .lineLimit(2)
             }
+        }
+        
+        private func favImageTapped() {
+            if newsItem.isFavorite {
+                newsItem.isFavorite = false
+                FavoriteNewsManager.shared.removeFavorite(newsID: newsItem.id.uuidString) { error in
+                    if let error = error {
+                        print("Error removing favorite: \(error)")
+                    } else {
+                        print("Favori olarak kaldırıldı: \(newsItem.name)")
+                    }
+                }
+            }
+            else {
+                newsItem.isFavorite = true
+                newsItem.userEmail = AuthManager.shared.currentUser?.email
+                FavoriteNewsManager.shared.addFavorite(news: newsItem) { error in
+                    if let error = error {
+                        print("Error adding favorite: \(error)")
+                    } else {
+                        print("Favori olarak eklendi: \(newsItem.name)")
+                    }
+                }
+            }
+            newsItem = newsItem
+            NotificationCenter.default.post(
+                name: .favoriteStatusChanged,
+                object: nil,
+                userInfo: ["newsItem": newsItem]
+            )
+        }
+        
+        
+        private func updateFavImage() {
+            let imageName = newsItem.isFavorite ? "SelectedFavorite" : "NonSelectedFavorite"
+            favImage = UIImage(named: imageName)
         }
     }
 }
