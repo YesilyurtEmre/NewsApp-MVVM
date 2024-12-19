@@ -27,7 +27,7 @@ final class HomeVC: BaseVC {
     }
     
     private func hostingControllerSetup() {
-        let viewModel = SwiftUIViewModel()
+//        let viewModel = SwiftUIViewModel()
         let swiftUIView = HomeView(viewModel: SwiftUIViewModel())
         
         // HostingController ile SwiftUI görünümünü UIKit'e ekle

@@ -64,12 +64,6 @@ final class HomeViewModel {
         }
     }
     
-//    func updateFavoriteStatus(for newsItem: NewsItem) {
-//        if let index = newsItems.firstIndex(where: { $0.id == newsItem.id }) {
-//            newsItems[index].isFavorite = newsItem.isFavorite
-//        }
-//    }
-    
     func getCategoriesCount() -> Int {
         Categories.allCases.count
     }

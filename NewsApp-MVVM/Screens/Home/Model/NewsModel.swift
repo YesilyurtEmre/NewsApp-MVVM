@@ -21,7 +21,7 @@ struct NewsItem: Identifiable, Codable {
     let name: String
     let source: String
     var isFavorite: Bool = false
-    var userEmail: String? 
+    var userEmail: String?
     
     
     enum CodingKeys: String, CodingKey {

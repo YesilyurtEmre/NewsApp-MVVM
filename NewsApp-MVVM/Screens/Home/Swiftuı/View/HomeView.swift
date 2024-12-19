@@ -14,7 +14,7 @@ struct HomeView: View {
         VStack() {
             Text("Google News")
                 .font(.title2)
-                .fontWeight(.heavy)
+                .font(.system(size: 17, weight: .medium))
                 .padding(.top, 10)
                 .frame(maxWidth: .infinity, alignment: .top)
             
@@ -29,6 +29,7 @@ struct HomeView: View {
                         }
                     }
                 }
+                .padding(.horizontal)
             }
             List(viewModel.newsItems) { newsItem in
                 NavigationLink(destination: NewsDetailSwiftUI(viewModel: NewsDetailViewModel( news: newsItem, isFavorite: newsItem.isFavorite))) {
@@ -37,6 +38,7 @@ struct HomeView: View {
                     }
                 }
             }
+            .id(UUID())
             .listStyle(.plain)
             .frame(maxWidth: .infinity)
             .padding(.vertical)
@@ -69,11 +71,7 @@ struct HomeView: View {
     }
     
     struct NewsRow: View {
-        @State var newsItem: NewsItem {
-            didSet {
-                updateFavImage()
-            }
-        }
+        @State  var newsItem: NewsItem
         @State private var favImage: UIImage?
         var toggleFavorite: () -> Void
         
@@ -108,7 +106,6 @@ struct HomeView: View {
                             }
                     }
                 }
-                
                 
                 Text(newsItem.source)
                     .font(.headline)
@@ -147,12 +144,6 @@ struct HomeView: View {
                     }
                 }
             }
-            newsItem = newsItem
-            NotificationCenter.default.post(
-                name: .favoriteStatusChanged,
-                object: nil,
-                userInfo: ["newsItem": newsItem]
-            )
         }
         
         

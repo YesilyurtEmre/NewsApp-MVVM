@@ -29,7 +29,11 @@ final class SwiftUIViewModel: ObservableObject {
     }
     
     @objc private func handleFavoriteStatusChanged(_ notification: Notification) {
-        fetchNews()
+        if let updatedItem = notification.userInfo?["newsItem"] as? NewsItem,
+           let index = newsItems.firstIndex(where: { $0.name == updatedItem.name }) {
+            newsItems[index] = updatedItem
+            
+        }
     }
     
     func fetchNews() {
@@ -37,7 +41,7 @@ final class SwiftUIViewModel: ObservableObject {
             guard let self = self else { return }
             
             switch result {
-            case .success(let items):
+            case .success(let newsItems):
                 guard let userEmail = Auth.auth().currentUser?.email else {
                     print("User email not found")
                     return
@@ -51,20 +55,20 @@ final class SwiftUIViewModel: ObservableObject {
                         return
                     }
                     
-                    let favoriteKeys = Set(favoriteNews.compactMap { $0.name })
-                    let updatedItems = items.map { item -> NewsItem in
-                        var updatedItem = item
-                        if favoriteKeys.contains(item.name) {
-                            updatedItem.isFavorite = true
+                    let favoriteNewsNames = Set(favoriteNews.compactMap { $0.name })
+                    let updatedNewsItems = newsItems.map { item -> NewsItem in
+                        var updatedNewsItem = item
+                        if favoriteNewsNames.contains(item.name) {
+                            updatedNewsItem.isFavorite = true
                         } else {
-                            updatedItem.isFavorite = false
+                            updatedNewsItem.isFavorite = false
                         }
                         
-                        return updatedItem
+                        return updatedNewsItem
                     }
                     
                     DispatchQueue.main.async {
-                        self.newsItems = updatedItems
+                        self.newsItems = updatedNewsItems
                     }
                 }
             case .failure(let error):
@@ -76,7 +80,6 @@ final class SwiftUIViewModel: ObservableObject {
     }
     
     func toggleFavorite(for newsItem: NewsItem) {
-
         if let index = newsItems.firstIndex(where: { $0.id == newsItem.id }) {
             newsItems[index].isFavorite.toggle()
             
