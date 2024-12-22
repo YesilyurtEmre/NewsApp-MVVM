@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import AlamofireImage
+
 
 struct HomeView: View {
     @ObservedObject var viewModel: SwiftUIViewModel
@@ -19,7 +21,7 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity, alignment: .top)
             
             ScrollView(.horizontal) {
-                HStack {
+                HStack() {
                     Spacer(minLength: 20)
                     ForEach(0..<viewModel.getCategoriesCount(), id: \.self) { index in
                         let category = Categories(rawValue: index)
@@ -44,7 +46,6 @@ struct HomeView: View {
             .padding(.vertical)
         }
     }
-    
     
     func selectCategory(index: Int) {
         viewModel.selectedCategoryIndex = index
@@ -73,32 +74,36 @@ struct HomeView: View {
     struct NewsRow: View {
         @State  var newsItem: NewsItem
         @State private var favImage: UIImage?
+        @State private var image: UIImage?
         var toggleFavorite: () -> Void
         
         var body: some View {
             VStack(alignment: .leading, spacing: 10) {
                 ZStack(alignment: .topTrailing) {
                     if let imageUrl = URL(string: newsItem.image) {
-                        AsyncImage(url: imageUrl) { image in
-                            image.resizable()
-                                .cornerRadius(8)
-                                .aspectRatio(contentMode: .fit)
-                        } placeholder: {
-                            ProgressView()
-                        }
+                        Image(uiImage: image ?? UIImage())
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 343, height: 200)
+                            .clipped()
+                            .cornerRadius(10)
+                            .onAppear {
+                                loadImage(from: imageUrl)
+                            }
                     } else {
                         Image(systemName: "photo")
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 343, height: 200)
+                            .clipped()
                     }
-                    
                     Button(action: {
                         favImageTapped()
                         
                     }) {
                         Image(newsItem.isFavorite ? "SelectedFavorite" : "NonselectedFavorite")
                             .resizable()
-                            .frame(width: 12, height: 24)
+                            .frame(width: 15, height: 30)
                             .foregroundColor(newsItem.isFavorite ? .black : .white)
                             .padding(8)
                             .onTapGesture {
@@ -120,6 +125,17 @@ struct HomeView: View {
                     .foregroundColor(.secondary)
                     .lineLimit(2)
             }
+        }
+        
+        private func loadImage(from url: URL) {
+            UIImageView().af.setImage(withURL: url, completion:  { response in
+                if let image = response.value {
+                    self.image = image
+                } else if let error = response.error {
+                    print("Error loading image: \(error.localizedDescription)")
+                }
+            })
+            
         }
         
         private func favImageTapped() {
@@ -144,6 +160,7 @@ struct HomeView: View {
                     }
                 }
             }
+            updateFavImage()
         }
         
         

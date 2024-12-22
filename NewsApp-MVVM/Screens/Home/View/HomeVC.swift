@@ -27,7 +27,7 @@ final class HomeVC: BaseVC {
     }
     
     private func hostingControllerSetup() {
-//        let viewModel = SwiftUIViewModel()
+
         let swiftUIView = HomeView(viewModel: SwiftUIViewModel())
         
         // HostingController ile SwiftUI görünümünü UIKit'e ekle
@@ -38,7 +38,6 @@ final class HomeVC: BaseVC {
         // SwiftUI görünümünü mevcut UIView'a ekle
         view.addSubview(hostingController.view)
         
-        // Auto Layout ayarları
         NSLayoutConstraint.activate([
             hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
             hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),

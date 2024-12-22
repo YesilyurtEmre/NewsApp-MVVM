@@ -25,6 +25,7 @@ class FavoriteNewsManager {
             completion(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "User email not found"]))
             return
         }
+        
         let docData: [String: String] = [
             Constants.FirestoreKeys.id: news.id.uuidString,
             Constants.FirestoreKeys.key: news.key,

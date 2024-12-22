@@ -16,8 +16,10 @@ struct NewsDetailSwiftUI: View {
             if let imageUrl = viewModel.newsImageUrl {
                 AsyncImage(url: imageUrl) { image in
                     image.resizable()
-                        .cornerRadius(8)
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 343, height: 200)
+                        .clipped()
+                        .cornerRadius(10)
                 } placeholder: {
                     ProgressView()
                 }
@@ -25,7 +27,9 @@ struct NewsDetailSwiftUI: View {
             } else {
                 Image(systemName: "photo")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 343, height: 200)
+                    .aspectRatio(contentMode: .fill)
+                    .clipped()
             }
             Text(viewModel.newsSource)
                 .font(.headline)

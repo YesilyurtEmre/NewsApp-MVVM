@@ -7,7 +7,7 @@
 import Foundation
 
 class NewsDetailViewModel: ObservableObject {
-    @Published var news: NewsItem?
+    var news: NewsItem?
     var isFavorite: Bool
     
     init(news: NewsItem, isFavorite: Bool) {
