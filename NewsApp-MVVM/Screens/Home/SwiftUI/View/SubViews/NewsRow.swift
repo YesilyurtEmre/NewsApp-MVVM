@@ -14,7 +14,6 @@ struct NewsRow: View {
     var toggleFavorite: (() -> Void)?
     var showFavoriteButton: Bool = true
     
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             ZStack(alignment: .topTrailing) {

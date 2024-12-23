@@ -49,10 +49,14 @@ struct HomeView: View {
     @ViewBuilder
     private func newsList() -> some View {
         List(viewModel.newsItems) { newsItem in
-            NavigationLink(destination: NewsDetailSwiftUI(viewModel: NewsDetailViewModel(news: newsItem))) {
+            ZStack {
                 NewsRow(newsItem: newsItem) {
                     viewModel.toggleFavorite(for: newsItem)
                 }
+                NavigationLink(destination: NewsDetailSwiftUI(viewModel: NewsDetailViewModel(news: newsItem))) {
+                    EmptyView()
+                }
+                .opacity(0.0)
             }
         }
         .id(UUID())
