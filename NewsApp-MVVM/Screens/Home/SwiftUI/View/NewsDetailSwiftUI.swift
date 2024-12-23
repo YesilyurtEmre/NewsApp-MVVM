@@ -15,7 +15,7 @@ struct NewsDetailSwiftUI: View {
         VStack(alignment: .leading, spacing: 10) {
             
             if let news = viewModel.news {
-                NewsRow(newsItem: news, toggleFavorite: nil, showFavoriteButton: false)
+                NewsRow(newsItem: news, toggleFavorite: nil, showFavoriteButton: false, showLineLimit: true)
                     .padding()
             }
         }

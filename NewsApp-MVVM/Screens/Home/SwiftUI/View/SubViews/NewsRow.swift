@@ -13,6 +13,8 @@ struct NewsRow: View {
     @State private var image: UIImage?
     var toggleFavorite: (() -> Void)?
     var showFavoriteButton: Bool = true
+    var showLineLimit: Bool = false
+    
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -65,6 +67,7 @@ struct NewsRow: View {
             Text(newsItem.description)
                 .font(.subheadline)
                 .foregroundColor(.secondary)
+                .lineLimit(showLineLimit ? 10 : 2)
         }
     }
     
@@ -76,7 +79,6 @@ struct NewsRow: View {
                 print("Error loading image: \(error.localizedDescription)")
             }
         })
-        
     }
     
     private func favImageTapped() {
