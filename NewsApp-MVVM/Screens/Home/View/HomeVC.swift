@@ -119,7 +119,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             if let indexPath = sender as? IndexPath,
                let detailVC = segue.destination as? NewsDetailVC {
                 let selectedNews = viewModel.getNewsItem(at: indexPath)
-                let detailViewModel = NewsDetailViewModel(news: selectedNews, isFavorite: true)
+                let detailViewModel = NewsDetailViewModel(news: selectedNews/*, isFavorite: true*/)
                 detailVC.viewModel = detailViewModel
             }
         }

@@ -13,38 +13,11 @@ struct NewsDetailSwiftUI: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            if let imageUrl = viewModel.newsImageUrl {
-                AsyncImage(url: imageUrl) { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 343, height: 200)
-                        .clipped()
-                        .cornerRadius(10)
-                } placeholder: {
-                    ProgressView()
-                }
-                .padding()
-            } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .frame(width: 343, height: 200)
-                    .aspectRatio(contentMode: .fill)
-                    .clipped()
+            
+            if let news = viewModel.news {
+                NewsRow(newsItem: news, toggleFavorite: nil, showFavoriteButton: false)
+                    .padding()
             }
-            Text(viewModel.newsSource)
-                .font(.headline)
-                .foregroundColor(.secondary)
-                .padding(.horizontal, 10)
-            
-            Text(viewModel.newsTitle)
-                .font(.headline)
-                .foregroundColor(.primary)
-                .padding(.horizontal, 10)
-            
-            Text(viewModel.newsDescription)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .padding(.horizontal, 10)
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
