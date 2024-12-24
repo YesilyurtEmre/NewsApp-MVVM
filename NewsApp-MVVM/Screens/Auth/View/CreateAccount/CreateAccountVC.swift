@@ -88,7 +88,13 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewM
     func didCreateAccount(success: Bool, message: String?) {
         DispatchQueue.main.async {
             if success {
-                self.showMessage(Constants.AuthMessages.registrationSuccess, shouldNavigate: true)
+                FavoriteNewsManager.shared.addUserToFirestore { error in
+                    if let error = error {
+                        self.showMessage("Kullanıcı Firestore'a eklenirken hata oluştu: \(error.localizedDescription)", shouldNavigate: false)
+                    } else {
+                        self.showMessage(Constants.AuthMessages.registrationSuccess, shouldNavigate: true)
+                    }
+                }
             } else {
                 self.showMessage(message ?? Constants.AuthMessages.loginError, shouldNavigate: false)
             }

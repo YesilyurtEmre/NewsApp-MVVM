@@ -14,7 +14,6 @@ struct NewsResponse: Codable {
 
 struct NewsItem: Identifiable, Codable {
     var id = UUID()
-//    let key: String
     let url: String
     let description: String
     let image: String
@@ -25,7 +24,7 @@ struct NewsItem: Identifiable, Codable {
     
     
     enum CodingKeys: String, CodingKey {
-        case /*key,*/ url, description, image, name, source
+        case  url, description, image, name, source
     }
 }
 
