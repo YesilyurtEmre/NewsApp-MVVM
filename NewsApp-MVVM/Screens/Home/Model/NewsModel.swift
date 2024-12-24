@@ -14,18 +14,18 @@ struct NewsResponse: Codable {
 
 struct NewsItem: Identifiable, Codable {
     var id = UUID()
-    let key: String
+//    let key: String
     let url: String
     let description: String
     let image: String
-    let name: String
+    var name: String
     let source: String
     var isFavorite: Bool = false
     var userEmail: String?
     
     
     enum CodingKeys: String, CodingKey {
-        case key, url, description, image, name, source
+        case /*key,*/ url, description, image, name, source
     }
 }
 

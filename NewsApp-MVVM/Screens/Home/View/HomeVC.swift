@@ -50,7 +50,7 @@ final class HomeVC: BaseVC {
     
     @objc func handleFavoriteStatusChanged(_ notification: Notification) {
         if let newsItem = notification.userInfo?["newsItem"] as? NewsItem {
-            if let index = viewModel.newsItems.firstIndex(where: { $0.key == newsItem.key }) {
+            if let index = viewModel.newsItems.firstIndex(where: { $0.id == newsItem.id }) {
                 viewModel.newsItems[index].isFavorite = newsItem.isFavorite
             }
             newsTableView.reloadData()

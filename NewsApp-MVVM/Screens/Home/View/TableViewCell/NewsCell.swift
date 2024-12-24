@@ -36,7 +36,7 @@ class NewsCell: UITableViewCell {
         guard var item = newsItem else { return }
         if item.isFavorite {
             item.isFavorite = false
-            FavoriteNewsManager.shared.removeFavorite(newsID: item.id.uuidString) { error in
+            FavoriteNewsManager.shared.removeFavorite(newsName: item.name) { error in
                 if let error = error {
                     print("Error removing favorite: \(error)")
                 } else {

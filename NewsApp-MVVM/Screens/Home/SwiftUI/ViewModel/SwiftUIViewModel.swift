@@ -91,7 +91,7 @@ final class SwiftUIViewModel: ObservableObject {
                     }
                 }
             } else {
-                FavoriteNewsManager.shared.removeFavorite(newsID: newsItems[index].id.uuidString) { error in
+                FavoriteNewsManager.shared.removeFavorite(newsName: newsItem.name) { error in
                     if let error = error {
                         print("Error removing favorite: \(error.localizedDescription)")
                         self.newsItems[index].isFavorite = true

@@ -40,7 +40,7 @@ final class FavoritesViewModel {
             favoriteNews[index].isFavorite = newsItem.isFavorite
             
             if !newsItem.isFavorite {
-                FavoriteNewsManager.shared.removeFavorite(newsID: newsItem.id.uuidString) { [weak self] error in
+                FavoriteNewsManager.shared.removeFavorite(newsName: newsItem.name) { [weak self] error in
                     if let error = error {
                         print("Error removing favorite: \(error)")
                         self?.onError?(error)

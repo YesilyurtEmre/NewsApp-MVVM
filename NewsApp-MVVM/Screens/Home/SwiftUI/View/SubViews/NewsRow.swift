@@ -84,7 +84,7 @@ struct NewsRow: View {
     private func favImageTapped() {
         if newsItem.isFavorite {
             newsItem.isFavorite = false
-            FavoriteNewsManager.shared.removeFavorite(newsID: newsItem.id.uuidString) { error in
+            FavoriteNewsManager.shared.removeFavorite(newsName: newsItem.name) { error in
                 if let error = error {
                     print("Error removing favorite: \(error)")
                 } else {

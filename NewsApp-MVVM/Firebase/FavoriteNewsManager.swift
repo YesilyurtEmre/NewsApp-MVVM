@@ -28,7 +28,7 @@ class FavoriteNewsManager {
         
         let docData: [String: String] = [
             Constants.FirestoreKeys.id: news.id.uuidString,
-            Constants.FirestoreKeys.key: news.key,
+//            Constants.FirestoreKeys.key: news.key,
             Constants.FirestoreKeys.url: news.url,
             Constants.FirestoreKeys.description: news.description,
             Constants.FirestoreKeys.image: news.image,
@@ -36,7 +36,7 @@ class FavoriteNewsManager {
             Constants.FirestoreKeys.source: news.source,
             Constants.FirestoreKeys.email: userEmail
         ]
-        db.collection(collectionName).document(news.id.uuidString).setData(docData) { error in
+        db.collection(collectionName).document(news.name).setData(docData) { error in
             if error == nil {
                 self.favorites.append(news)
                 NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)
@@ -46,10 +46,10 @@ class FavoriteNewsManager {
     }
     
     // MARK: - Remove Favorite News
-    func removeFavorite(newsID: String, completion: @escaping (Error?) -> Void) {
-        db.collection(collectionName).document(newsID).delete { error in
+    func removeFavorite(newsName: String, completion: @escaping (Error?) -> Void) {
+        db.collection(collectionName).document(newsName).delete { error in
             if error == nil {
-                self.favorites.removeAll { $0.id.uuidString == newsID }
+                self.favorites.removeAll { $0.name == newsName }
                 NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)
             }
             completion(error)
@@ -59,12 +59,43 @@ class FavoriteNewsManager {
     
     // MARK: - Load Favorite News
     func loadFavorites(for email: String, completion: @escaping ([NewsItem]?, Error?) -> Void) {
+        //        db.collection(collectionName).whereField("email", isEqualTo: email).getDocuments { snapshot, error in
+        //            guard let documents = snapshot?.documents else {
+        //
+        //                let errorMessage = error?.localizedDescription ?? "Unknown error while fetching documents"
+        //                print("\(Constants.Errors.firestoreError) \(errorMessage)")
+        //
+        //                completion(nil, error ?? NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
+        //                return
+        //            }
+        //
+        //            var newsItems: [NewsItem] = []
+        //            for document in documents {
+        //                do {
+        //                    var newsItem = try document.data(as: NewsItem.self)
+        //                    if let uuid = UUID(uuidString: document.documentID) {
+        //                        newsItem.id = uuid
+        //                    } else {
+        //                        print("\(Constants.Errors.invalidUUID) \(document.documentID)")
+        //                        completion(nil, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid UUID: \(document.documentID)"]))
+        //                        return
+        //                    }
+        //                    newsItems.append(newsItem)
+        //                } catch {
+        //                    print("\(Constants.Errors.decodingError) \(error)")
+        //                    completion(nil, error)
+        //                    return
+        //                }
+        //            }
+        //            self.favorites = newsItems
+        //            print("Favorites loaded successfully for user: \(email)")
+        //            completion(newsItems, nil)
+        //        }
+        
         db.collection(collectionName).whereField("email", isEqualTo: email).getDocuments { snapshot, error in
             guard let documents = snapshot?.documents else {
-                
                 let errorMessage = error?.localizedDescription ?? "Unknown error while fetching documents"
                 print("\(Constants.Errors.firestoreError) \(errorMessage)")
-                
                 completion(nil, error ?? NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
                 return
             }
@@ -73,13 +104,7 @@ class FavoriteNewsManager {
             for document in documents {
                 do {
                     var newsItem = try document.data(as: NewsItem.self)
-                    if let uuid = UUID(uuidString: document.documentID) {
-                        newsItem.id = uuid
-                    } else {
-                        print("\(Constants.Errors.invalidUUID) \(document.documentID)")
-                        completion(nil, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid UUID: \(document.documentID)"]))
-                        return
-                    }
+                    newsItem.name = document.documentID
                     newsItems.append(newsItem)
                 } catch {
                     print("\(Constants.Errors.decodingError) \(error)")
