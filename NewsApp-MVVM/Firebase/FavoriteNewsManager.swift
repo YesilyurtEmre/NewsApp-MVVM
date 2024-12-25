@@ -18,6 +18,7 @@ class FavoriteNewsManager {
     
     private init() {}
     
+    // MARK: - Add User to Firestore and Initialize Data
     func addUserToFirestore(completion: @escaping (Error?) -> Void) {
         guard let currentUser = Auth.auth().currentUser else {
             print("Mevcut kullanıcı bulunamadı.")
@@ -25,17 +26,41 @@ class FavoriteNewsManager {
             return
         }
         
+        // Initialize user document
         let userDocData: [String: Any] = [
             "email": currentUser.email ?? ""
         ]
         
-        db.collection("users").document(currentUser.email ?? "").setData(userDocData) { error in
+        db.collection(collectionName).document(currentUser.email ?? "").setData(userDocData) { error in
             if let error = error {
                 print("Kullanıcı Firestore'a kaydedilemedi: \(error.localizedDescription)")
                 completion(error)
             } else {
                 print("Kullanıcı Firestore'a başarıyla kaydedildi!")
+                
+                // Create the user's favorites collection after user document creation
+                self.createFavoritesCollection(email: currentUser.email ?? "")
                 completion(nil)
+            }
+        }
+    }
+    
+    // MARK: - Create Favorites Collection for New User
+    func createFavoritesCollection(email: String) {
+        let favoritesDoc = db.collection(collectionName)
+            .document(email)
+            .collection("favorites")
+            .document()
+        
+        let defaultData: [String: Any] = [
+            "status": "initialized"
+        ]
+        
+        favoritesDoc.setData(defaultData) { error in
+            if let error = error {
+                print("Error initializing favorites collection: \(error)")
+            } else {
+                print("Favorites collection initialized for \(email)")
             }
         }
     }
@@ -57,6 +82,7 @@ class FavoriteNewsManager {
             Constants.FirestoreKeys.source: news.source,
             Constants.FirestoreKeys.email: userEmail
         ]
+        
         db.collection(collectionName).document(news.userEmail ?? "").setData(docData) { error in
             if error == nil {
                 self.favorites.append(news)
@@ -75,7 +101,6 @@ class FavoriteNewsManager {
             }
             completion(error)
         }
-        
     }
     
     // MARK: - Load Favorite News
@@ -88,21 +113,39 @@ class FavoriteNewsManager {
                 return
             }
             
+            // Log the document data
+            for document in documents {
+                print("Document data: \(document.data())")
+            }
+            
             var newsItems: [NewsItem] = []
             for document in documents {
-                do {
-                    var newsItem = try document.data(as: NewsItem.self)
-                    newsItem.name = document.documentID
+//                do {
+//                    var newsItem = try document.data(as: NewsItem.self)
+//                    newsItem.name = document.documentID
+//                    newsItems.append(newsItem)
+//                } catch {
+//                    print("\(Constants.Errors.decodingError) \(error)")
+//                    completion(nil, error)
+//                    return
+//                }
+                let data = document.data()
+                    guard let url = data["url"] as? String,
+                          let description = data["description"] as? String,
+                          let image = data["image"] as? String,
+                          let name = data["name"] as? String,
+                          let source = data["source"] as? String else {
+                        print("Veri eksik veya hatalı formatta")
+                        continue
+                    }
+
+                    let newsItem = NewsItem(url: url, description: description, image: image, name: name, source: source, userEmail: data["email"] as? String)
                     newsItems.append(newsItem)
-                } catch {
-                    print("\(Constants.Errors.decodingError) \(error)")
-                    completion(nil, error)
-                    return
-                }
             }
             self.favorites = newsItems
             print("Favorites loaded successfully for user: \(email)")
             completion(newsItems, nil)
         }
     }
+    
 }

@@ -12,8 +12,7 @@ import Moya
 enum NewsService {
     case fetchNews(category: Categories)
     static let BASE_URL = "https://api.collectapi.com/news/getNews"
-    static let API_KEY =  "apikey 1FAqmFwjQ4qV9gBKdgzi0e:4pJnx1IFOgG3XAlM5NrIhh"
-    
+    static let API_KEY =  "apikey 52evXCNs7U4DgKljMlYp3f:6nREdfGoARAcw6h5Hje99V"
 }
 
 extension NewsService: TargetType {

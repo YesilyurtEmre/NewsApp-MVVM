@@ -31,7 +31,7 @@ struct Constants {
     }
     
     struct FirestoreKeys {
-        static let collectionName = "FavoriteNews"
+        static let collectionName = "users"
         static let id = "id"
         static let key = "key"
         static let url = "url"
