@@ -105,13 +105,18 @@ class FavoriteNewsManager {
     // MARK: - Remove Favorite News
     func removeFavorite(newsName: String, completion: @escaping (Error?) -> Void) {
         db.collection(collectionName).document(newsName).delete { error in
-            if error == nil {
+            if let error = error {
+                print("Error deleting document: \(error.localizedDescription)")
+            } else {
+                print("Document successfully deleted from Firebase: \(newsName)")
                 self.favorites.removeAll { $0.name == newsName }
+                print("Favorites after deletion: \(self.favorites)")
                 NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)
             }
             completion(error)
         }
     }
+
     
     // MARK: - Load Favorite News
     func loadFavorites(for email: String, completion: @escaping ([NewsItem]?, Error?) -> Void) {

@@ -37,8 +37,10 @@ final class SwiftUIViewModel: ObservableObject {
     }
     
     func fetchNews() {
+        print("FetchNews started...")
         APIServices.shared.fetchNews(category: selectedCategory) { [weak self] result in
             guard let self = self else { return }
+            print("API call completed, checking result...")
         
             switch result {
             case .success(let newsItems):
@@ -51,7 +53,6 @@ final class SwiftUIViewModel: ObservableObject {
                 
                 FavoriteNewsManager.shared.loadFavorites(for: userEmail) { favoriteNews, error in
                     print("Loading favorites for user: \(userEmail)")
-                    print("favoriteNews--burası yok boş--\(String(describing: favoriteNews))")
                     guard let favoriteNews = favoriteNews else {
                         if let error = error {
                             print("Error loading favorites: \(error.localizedDescription)")

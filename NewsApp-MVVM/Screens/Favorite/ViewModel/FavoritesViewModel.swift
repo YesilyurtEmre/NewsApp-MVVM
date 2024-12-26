@@ -36,6 +36,7 @@ final class FavoritesViewModel {
         }
     }
     
+
     func updateFavoriteStatus(for newsItem: NewsItem) {
         if let index = favoriteNews.firstIndex(where: { $0.id == newsItem.id }) {
             favoriteNews[index].isFavorite = newsItem.isFavorite
