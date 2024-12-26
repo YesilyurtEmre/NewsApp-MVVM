@@ -25,8 +25,8 @@ class FavoriteNewsManager {
             completion(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Current user not found"]))
             return
         }
-        
-        // Initialize user document
+        print("User email: \(String(describing: currentUser.email))") // Debug print
+
         let userDocData: [String: Any] = [
             "email": currentUser.email ?? ""
         ]
@@ -38,7 +38,6 @@ class FavoriteNewsManager {
             } else {
                 print("Kullanıcı Firestore'a başarıyla kaydedildi!")
                 
-                // Create the user's favorites collection after user document creation
                 self.createFavoritesCollection(email: currentUser.email ?? "")
                 completion(nil)
             }
@@ -53,7 +52,12 @@ class FavoriteNewsManager {
             .document()
         
         let defaultData: [String: Any] = [
-            "status": "initialized"
+            "url": "",
+            "description": "",
+            "image": "",
+            "name": "initialized",
+            "source": "",
+            "email": email
         ]
         
         favoritesDoc.setData(defaultData) { error in
@@ -67,7 +71,8 @@ class FavoriteNewsManager {
     
     // MARK: - Add Favorite News
     func addFavorite(news: NewsItem, completion: @escaping (Error?) -> Void) {
-        guard let userEmail = Auth.auth().currentUser?.email else {
+        print("addFavorite fonksiyonu çağrıldı!")
+        guard let userEmail = Auth.auth().currentUser?.email, !userEmail.isEmpty else {
             print("Kullanıcı e-postası alınamadı.")
             completion(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "User email not found"]))
             return
@@ -83,14 +88,19 @@ class FavoriteNewsManager {
             Constants.FirestoreKeys.email: userEmail
         ]
         
-        db.collection(collectionName).document(news.userEmail ?? "").setData(docData) { error in
-            if error == nil {
-                self.favorites.append(news)
-                NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)
+        db.collection(collectionName)
+            .document(userEmail)
+            .collection("favorites")
+            .document(news.name)
+            .setData(docData) { error in
+                if error == nil {
+                    self.favorites.append(news)
+                    NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)
+                }
+                completion(error)
             }
-            completion(error)
-        }
     }
+    
     
     // MARK: - Remove Favorite News
     func removeFavorite(newsName: String, completion: @escaping (Error?) -> Void) {
@@ -105,47 +115,41 @@ class FavoriteNewsManager {
     
     // MARK: - Load Favorite News
     func loadFavorites(for email: String, completion: @escaping ([NewsItem]?, Error?) -> Void) {
-        db.collection(collectionName).whereField("email", isEqualTo: email).getDocuments { snapshot, error in
-            guard let documents = snapshot?.documents else {
-                let errorMessage = error?.localizedDescription ?? "Unknown error while fetching documents"
-                print("\(Constants.Errors.firestoreError) \(errorMessage)")
-                completion(nil, error ?? NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
-                return
-            }
-            
-            // Log the document data
-            for document in documents {
-                print("Document data: \(document.data())")
-            }
-            
-            var newsItems: [NewsItem] = []
-            for document in documents {
-//                do {
-//                    var newsItem = try document.data(as: NewsItem.self)
-//                    newsItem.name = document.documentID
-//                    newsItems.append(newsItem)
-//                } catch {
-//                    print("\(Constants.Errors.decodingError) \(error)")
-//                    completion(nil, error)
-//                    return
-//                }
-                let data = document.data()
-                    guard let url = data["url"] as? String,
-                          let description = data["description"] as? String,
-                          let image = data["image"] as? String,
-                          let name = data["name"] as? String,
-                          let source = data["source"] as? String else {
-                        print("Veri eksik veya hatalı formatta")
-                        continue
-                    }
-
-                    let newsItem = NewsItem(url: url, description: description, image: image, name: name, source: source, userEmail: data["email"] as? String)
-                    newsItems.append(newsItem)
-            }
-            self.favorites = newsItems
-            print("Favorites loaded successfully for user: \(email)")
-            completion(newsItems, nil)
+        print("Loading favorites for email: \(email)")
+        // E-posta adresi boşsa, hata döndür
+        guard !email.isEmpty else {
+            let errorMessage = "User email is empty"
+            print(errorMessage)
+            completion(nil, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
+            return
         }
+        
+        db.collection(collectionName)
+            .document(email)
+            .collection("favorites")
+            .getDocuments { snapshot, error in
+
+                guard let documents = snapshot?.documents else {
+                    let errorMessage = error?.localizedDescription ?? "Unknown error while fetching documents"
+                    print("\(Constants.Errors.firestoreError) \(errorMessage)")
+                    completion(nil, error ?? NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMessage]))
+                    return
+                }
+
+                var newsItems: [NewsItem] = []
+                for document in documents {
+                    let data = document.data()
+                    print("Document data: \(data)")
+                    do {
+                        let newsItem = try document.data(as: NewsItem.self)
+                        newsItems.append(newsItem)
+                    } catch {
+                        print("Error decoding document: \(error.localizedDescription)")
+                    }
+                }
+                self.favorites = newsItems
+                print("Favorites loaded successfully for user: \(email)")
+                completion(newsItems, nil)
+            }
     }
-    
 }

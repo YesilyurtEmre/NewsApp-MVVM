@@ -16,6 +16,7 @@ final class FavoritesViewModel {
     
     var favoriteNews: [NewsItem] = [] {
         didSet {
+            print("Favorites updated, new count: \(favoriteNews.count)")
             onFavoritesUpdated?()
         }
     }

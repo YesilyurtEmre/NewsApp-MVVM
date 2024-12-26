@@ -39,15 +39,19 @@ final class SwiftUIViewModel: ObservableObject {
     func fetchNews() {
         APIServices.shared.fetchNews(category: selectedCategory) { [weak self] result in
             guard let self = self else { return }
-            
+        
             switch result {
             case .success(let newsItems):
+                print("News items fetched: \(newsItems.count) items")
                 guard let userEmail = Auth.auth().currentUser?.email else {
                     print("User email not found")
                     return
                 }
+                print("User email: \(userEmail)")
                 
                 FavoriteNewsManager.shared.loadFavorites(for: userEmail) { favoriteNews, error in
+                    print("Loading favorites for user: \(userEmail)")
+                    print("favoriteNews--burası yok boş--\(String(describing: favoriteNews))")
                     guard let favoriteNews = favoriteNews else {
                         if let error = error {
                             print("Error loading favorites: \(error.localizedDescription)")
@@ -56,6 +60,8 @@ final class SwiftUIViewModel: ObservableObject {
                     }
                     
                     let favoriteNewsNames = Set(favoriteNews.compactMap { $0.name })
+                    print("Favorite news names: \(favoriteNewsNames)")
+
                     let updatedNewsItems = newsItems.map { item -> NewsItem in
                         var updatedNewsItem = item
                         if favoriteNewsNames.contains(item.name) {

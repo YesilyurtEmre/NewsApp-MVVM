@@ -18,6 +18,7 @@ struct HomeView: View {
             categoryList()
             newsList()
         }
+        .onAppear() { viewModel.fetchNews() }
     }
     
     @ViewBuilder

@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import SwiftUI
 
 class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewModelDelegate {
     
@@ -76,12 +77,12 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewM
         }
     }
     
-    private func navigateToHomeVC() {
-        let storyboard = UIStoryboard(name: Constants.StoryboardIdentifiers.HomeStoryboard, bundle: nil)
-        if let homeVC = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardIdentifiers.HomeVC) as? HomeVC {
-            homeVC.modalPresentationStyle = .fullScreen
-            self.present(homeVC, animated: true, completion: nil)
-        }
+    private func navigateToHomeView() {
+        let homeView = HomeView(viewModel: SwiftUIViewModel())
+        let hostingController = UIHostingController(rootView: homeView)
+        
+        hostingController.modalPresentationStyle = .fullScreen
+        self.present(hostingController, animated: true, completion: nil)
     }
     
     
@@ -105,7 +106,7 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewM
         let alert = UIAlertController(title: "Bilgi", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Tamam", style: .default) { _ in
             if shouldNavigate {
-                self.navigateToHomeVC()
+                self.navigateToHomeView()
             }
         })
         present(alert, animated: true, completion: nil)

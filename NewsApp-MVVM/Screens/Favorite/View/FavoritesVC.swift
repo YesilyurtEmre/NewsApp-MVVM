@@ -49,6 +49,7 @@ class FavoritesVC: UIViewController {
     private func configureTableView() {
         favTableView.dataSource = self
         favTableView.delegate = self
+        self.favTableView.reloadData()
         favTableView.register(UINib(nibName: Constants.CellIdentifiers.newsCell, bundle: nil), forCellReuseIdentifier: Constants.CellIdentifiers.newsCell)
     }
 }
