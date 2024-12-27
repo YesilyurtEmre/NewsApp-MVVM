@@ -46,6 +46,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         
         for (index, textField) in textFields.enumerated() {
             textField.delegate = self
+            textField.tintColor = .blue
             if index < placeholders.count {
                 textField.setDynamicPlaceholder(placeholders[index])
             }
