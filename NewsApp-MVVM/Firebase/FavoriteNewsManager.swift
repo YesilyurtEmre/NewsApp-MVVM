@@ -101,7 +101,7 @@ class FavoriteNewsManager {
     // MARK: - Remove Favorite News
     func removeFavorite(newsName: String, completion: @escaping (Error?) -> Void) {
         db.collection(collectionName).document(Auth.auth().currentUser?.email ?? "").collection("favorites").document(newsName).delete { error in
-            if let error = error {
+            if let _ = error {
             } else {
                 self.favorites.removeAll { $0.name == newsName }
                 NotificationCenter.default.post(name: .favoriteNewsUpdated, object: nil)

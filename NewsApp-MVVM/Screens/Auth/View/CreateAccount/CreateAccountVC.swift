@@ -69,6 +69,7 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewM
         )
     }
     
+    
     func didValidateFields(success: Bool, errorMessage: String?) {
         if success {
             guard let email = emailTextField.text, let password = passwordTextField.text else { return }
@@ -76,14 +77,6 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewM
         } else {
             showMessage(errorMessage ?? Constants.AuthMessages.loginError, shouldNavigate: false)
         }
-    }
-    
-    private func navigateToHomeView() {
-        let homeView = HomeView(viewModel: SwiftUIViewModel())
-        let hostingController = UIHostingController(rootView: homeView)
-        
-        hostingController.modalPresentationStyle = .fullScreen
-        self.present(hostingController, animated: true, completion: nil)
     }
     
     
@@ -107,9 +100,19 @@ class CreateAccountVC: UIViewController, UITextFieldDelegate, CreateAccountViewM
         let alert = UIAlertController(title: "Bilgi", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Tamam", style: .default) { _ in
             if shouldNavigate {
-                self.navigateToHomeView()
+                self.navigateToTabBarController()
             }
         })
         present(alert, animated: true, completion: nil)
+    }
+    
+    private func navigateToTabBarController() {
+        let storyboard = UIStoryboard(name: Constants.StoryboardIdentifiers.mainStoryboard, bundle: nil)
+        
+        if let tabBarController = storyboard.instantiateViewController(withIdentifier: Constants.StoryboardIdentifiers.tabBarController) as? UITabBarController {
+            tabBarController.modalPresentationStyle = .fullScreen
+            
+            self.present(tabBarController, animated: true, completion: nil)
+        }
     }
 }
